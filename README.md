@@ -1,1 +1,1 @@
-# [Vision Craft Marketplace]
+# Vision Craft Marketplace
