@@ -1,11 +1,15 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
-
+import { isLoggedIn } from "../../../src/helpers/IsLoggedIn";
+import { Logout } from "../../services/Services";
 import routes from "routes.js";
 
-function Header() {
+const Header = () => {
   const location = useLocation();
+
+  const [loggedIn, setLoggedIn] = useState(isLoggedIn());
+
   const mobileSidebarToggle = (e) => {
     e.preventDefault();
     document.documentElement.classList.toggle("nav-open");
@@ -176,19 +180,35 @@ function Header() {
               </Dropdown.Menu>
             </Dropdown>
             <Nav.Item>
-              <Nav.Link
-                className="m-0"
-                href="#pablo"
-                onClick={(e) => e.preventDefault()}
-              >
-                <span className="no-icon">Log out</span>
-              </Nav.Link>
+              {!loggedIn ? (
+                <>
+                  <Nav.Link className="m-0" href="/login">
+                    <span className="no-icon">Register</span>
+                  </Nav.Link>
+                  <span>Or</span>
+                  <Nav.Link className="m-0" href="/login">
+                    <span className="no-icon">Sign In</span>
+                  </Nav.Link>
+                </>
+              ) : (
+                <>
+                  <Nav.Item>
+                    <Nav.Link
+                      className="m-0"
+                      href="/login"
+                      onClick={() => Logout()}
+                    >
+                      <span className="no-icon">Log out</span>
+                    </Nav.Link>
+                  </Nav.Item>
+                </>
+              )}
             </Nav.Item>
           </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
   );
-}
+};
 
 export default Header;
