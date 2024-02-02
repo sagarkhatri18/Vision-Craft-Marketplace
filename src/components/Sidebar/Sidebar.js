@@ -38,8 +38,11 @@ function Sidebar({ color, image, routes }) {
                 >
                   <NavLink
                     to={prop.layout + prop.path}
-                    className="nav-link"
-                    activeClassName="active"
+                    // className="nav-link"
+
+                    className={(navData) => (navData.isActive ? "nav-link active-style" : 'nav-link')}
+                    
+                    // activeClassName="active"
                   >
                     <i className={prop.icon} />
                     <p>{prop.name}</p>
