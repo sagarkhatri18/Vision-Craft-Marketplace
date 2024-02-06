@@ -165,6 +165,12 @@ const Register = () => {
                             className="form-control"
                             placeholder="Re-enter Password"
                           />
+                          {validator.message(
+                            "password_confirmation",
+                            state.password_confirmation,
+                            `required|in:${state.password}`,
+                            { messages: { in: "Passwords need to match!" } }
+                          )}
                         </div>
 
                         <div className="text-center">

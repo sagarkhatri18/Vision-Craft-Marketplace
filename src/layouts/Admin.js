@@ -10,6 +10,9 @@ import routes from "routes.js";
 
 import sidebarImage from "assets/img/sidebar-3.jpg";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function Admin() {
   const [image, setImage] = React.useState(sidebarImage);
   const [color, setColor] = React.useState("black");
@@ -55,6 +58,7 @@ function Admin() {
           </div>
           <Footer />
         </div>
+        <ToastContainer />
       </div>
       {/* <FixedPlugin
         hasImage={hasImage}
