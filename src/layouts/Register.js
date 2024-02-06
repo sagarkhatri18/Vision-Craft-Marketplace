@@ -1,27 +1,37 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Nav } from "react-bootstrap";
-import { login } from "../../src/services/Services";
-import { useNavigate } from "react-router-dom";
-import "../assets/css/login/material-dashboard.min.css";
-import backgroundImage from "../assets/img/login-banner.avif";
-
-// For Toastr
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 // Validator Packages
 import SimpleReactValidator from "simple-react-validator";
 
-const Login = () => {
-  const navigate = useNavigate();
+import backgroundImage from "../assets/img/login-banner.avif";
 
+const Register = () => {
   // Validator Imports
-  const validator = useRef(new SimpleReactValidator()).current;
+  let validator = useRef(
+    new SimpleReactValidator({
+      validators: {
+        password: {
+          required: true,
+          message:
+            "Password must be at least 8 characters, contain at least one letter and at least one digit.",
+          rule: (val, params, validator) => {
+            return validator.helpers.testRegex(
+              val,
+              /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/
+            );
+          },
+        },
+      },
+    })
+  ).current;
   const [, forceUpdate] = useState();
 
   const [state, setState] = useState({
-    email: "admin@admin.com",
-    password: "Password@123",
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
   });
 
   const handleChange = (e) => {
@@ -31,30 +41,13 @@ const Login = () => {
     }));
   };
 
+  // handle the form submission part
   const handleSubmit = (event) => {
     event.preventDefault();
 
     if (validator.allValid()) {
-      const email = state.email;
-      const password = state.password;
-
-      login(email, password)
-        .then((res) => {
-          const response = res.data;
-
-          if (response.success) {
-            const token = response.token;
-            localStorage.setItem("token", token);
-            navigate("/user/dashboard");
-          } else {
-            toast.error("Invalid email or Password");
-          }
-        })
-        .catch((error) => {
-          if (error.response.data.message != undefined)
-            toast.error(error.response.data.message);
-          else toast.error("Login failed");
-        });
+      console.log(state);
+      return false;
     } else {
       validator.showMessages();
       forceUpdate(1);
@@ -88,27 +81,63 @@ const Login = () => {
                           </Nav.Link>
                         </h4>
                         <h5 className="text-white font-weight-bolder text-center mt-2 mb-0">
-                          Sign in
+                          Register
                         </h5>
                       </div>
                     </div>
                     <div className="card-body">
                       <form
                         role="form"
-                        onSubmit={handleSubmit}
                         className="login-form text-start"
+                        onSubmit={handleSubmit}
                       >
                         <div className="input-group input-group-outline my-3">
                           <label className="form-label"></label>
                           <input
-                            type="email"
+                            type="firstname"
+                            name="firstname"
+                            value={state.firstname}
+                            onChange={handleChange}
+                            className="form-control"
+                            placeholder="Enter your first name"
+                          />
+                          {validator.message(
+                            "firstname",
+                            state.firstname,
+                            "required|alpha"
+                          )}
+                        </div>
+                        <div className="input-group input-group-outline my-3">
+                          <label className="form-label"></label>
+                          <input
+                            type="lastname"
+                            name="lastname"
+                            value={state.lastname}
+                            onChange={handleChange}
+                            className="form-control"
+                            placeholder="Enter your last name"
+                          />
+                          {validator.message(
+                            "lastname",
+                            state.lastname,
+                            "required|alpha"
+                          )}
+                        </div>
+                        <div className="input-group input-group-outline my-3">
+                          <label className="form-label"></label>
+                          <input
+                            type="text"
                             name="email"
                             value={state.email}
-                            className="form-control"
                             onChange={handleChange}
-                            placeholder="Email"
+                            className="form-control"
+                            placeholder="Enter your email"
                           />
-                          {validator.message("email", state.email, "required")}
+                          {validator.message(
+                            "email",
+                            state.email,
+                            "required|email"
+                          )}
                         </div>
                         <div className="input-group input-group-outline mb-3">
                           <label className="form-label"></label>
@@ -116,15 +145,26 @@ const Login = () => {
                             type="password"
                             name="password"
                             value={state.password}
-                            className="form-control"
                             onChange={handleChange}
+                            className="form-control"
                             placeholder="Password"
                           />
                           {validator.message(
                             "password",
                             state.password,
-                            "required"
+                            "required|password"
                           )}
+                        </div>
+                        <div className="input-group input-group-outline mb-3">
+                          <label className="form-label"></label>
+                          <input
+                            type="password"
+                            name="password_confirmation"
+                            value={state.password_confirmation}
+                            onChange={handleChange}
+                            className="form-control"
+                            placeholder="Re-enter Password"
+                          />
                         </div>
 
                         <div className="text-center">
@@ -132,16 +172,16 @@ const Login = () => {
                             type="submit"
                             className="btn bg-gradient-primary w-100 my-4 mb-2"
                           >
-                            Sign in <span className="fa fa-key"></span>
+                            Sign Up <span className="fa fa-key"></span>
                           </button>
                         </div>
                         <p className="mt-4 text-sm text-center">
-                          Don't have an account?&nbsp;
+                          Already have an account ? &nbsp;
                           <a
-                            href="/register"
+                            href="/login"
                             className="text-primary text-gradient font-weight-bold"
                           >
-                            Sign up
+                            Login
                           </a>
                         </p>
                       </form>
@@ -157,4 +197,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

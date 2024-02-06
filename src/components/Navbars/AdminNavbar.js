@@ -4,6 +4,7 @@ import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
 import { isLoggedIn } from "../../../src/helpers/IsLoggedIn";
 import { Logout } from "../../services/Services";
 import routes from "routes.js";
+import avatar from "../../assets/img/default-avatar.png";
 
 const Header = () => {
   const location = useLocation();
@@ -133,7 +134,7 @@ const Header = () => {
                 <span className="no-icon">Account</span>
               </Nav.Link>
             </Nav.Item>
-            <Dropdown as={Nav.Item}>
+            <Dropdown as={Nav.Item} align="end">
               <Dropdown.Toggle
                 aria-expanded={false}
                 aria-haspopup={true}
@@ -143,14 +144,20 @@ const Header = () => {
                 variant="default"
                 className="m-0"
               >
-                <span className="no-icon">Dropdown</span>
+                <span className="no-icon">
+                  <img
+                    src={avatar}
+                    style={{
+                      height: "30px",
+                      width: "30px",
+                      borderRadius: "30px",
+                    }}
+                  />
+                </span>
               </Dropdown.Toggle>
               <Dropdown.Menu aria-labelledby="navbarDropdownMenuLink">
-                <Dropdown.Item
-                  href="#pablo"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  Action
+                <Dropdown.Item href="/login" onClick={() => Logout()}>
+                  Logout
                 </Dropdown.Item>
                 <Dropdown.Item
                   href="#pablo"
@@ -191,17 +198,7 @@ const Header = () => {
                   </Nav.Link>
                 </>
               ) : (
-                <>
-                  <Nav.Item>
-                    <Nav.Link
-                      className="m-0"
-                      href="/login"
-                      onClick={() => Logout()}
-                    >
-                      <span className="no-icon">Log out</span>
-                    </Nav.Link>
-                  </Nav.Item>
-                </>
+                ""
               )}
             </Nav.Item>
           </Nav>
