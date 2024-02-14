@@ -23,7 +23,7 @@ const sendEmail = async (mailData, id, token) => {
       theme: "default",
       product: {
         name: process.env.APP_NAME,
-        link: "#",
+        link: `${process.env.BASE_URL}/login`,
       },
     });
 
