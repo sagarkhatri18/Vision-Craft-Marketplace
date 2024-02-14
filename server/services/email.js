@@ -3,7 +3,7 @@ const mailgen = require("mailgen");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const sendEmail = async (mailData) => {
+const sendEmail = async (mailData, id, token) => {
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
@@ -37,7 +37,7 @@ const sendEmail = async (mailData) => {
           instructions: "Please click below button to activate your account",
           button: {
             text: "Confirm your account",
-            link: "https://mailgen.js/confirm?s=d9729feb74992cc3482b350163a1a010",
+            link: `${process.env.BASE_URL}/account/verify/${id}/${token}`,
           },
         },
       },

@@ -4,11 +4,9 @@ import { login } from "../../src/services/Services";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/login/material-dashboard.min.css";
 import backgroundImage from "../assets/img/login-banner.avif";
-
 // For Toastr
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 // Validator Packages
 import SimpleReactValidator from "simple-react-validator";
 
@@ -36,7 +34,7 @@ const Login = () => {
 
     if (validator.allValid()) {
       const email = state.email;
-      const password = state.password;
+      const password = state.password // hash the password
 
       login(email, password)
         .then((res) => {

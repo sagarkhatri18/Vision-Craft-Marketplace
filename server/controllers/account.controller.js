@@ -28,6 +28,13 @@ exports.login = async (req, res, next) => {
     // compare the user's password with the one provided from the user from login form
     bcrypt.compare(password, user.password).then(function (result) {
       if (result) {
+        // check if the email is verified or not
+        if (!user.verified) {
+          return res
+            .status(400)
+            .json({ message: "Account has not been verified yet" });
+        }
+
         const token = tokenSign(user);
 
         // res.cookie("jwt", token, {
@@ -71,11 +78,11 @@ exports.register = async (req, res, next) => {
       verified: reqParam.verified,
     })
       .then(async (data) => {
-        console.log(data._id)
+        console.log(data._id);
         // save in the token table
         let token = await Token.create({
           userId: data._id,
-          token: require('crypto').randomBytes(32).toString('hex'),
+          token: require("crypto").randomBytes(32).toString("hex"),
         });
 
         const emailData = {
@@ -83,7 +90,7 @@ exports.register = async (req, res, next) => {
           mail: reqParam.email,
           subject: "Verify Email",
         };
-        await sendEmail(emailData);
+        await sendEmail(emailData, data._id, token.token);
 
         res.status(200).json({
           message: "Successfully registered",
@@ -108,6 +115,7 @@ exports.register = async (req, res, next) => {
 // verify the account
 exports.verify = async (req, res, next) => {
   try {
+    
     const user = await User.findOne({ _id: req.params.id });
     if (!user) return res.status(400).send("Invalid link");
 
@@ -115,13 +123,15 @@ exports.verify = async (req, res, next) => {
       userId: user._id,
       token: req.params.token,
     });
+
     if (!token) return res.status(400).send("Invalid link");
 
-    await User.updateOne({ _id: user._id, verified: true });
-    await Token.findByIdAndRemove(token._id);
+    await User.findOneAndUpdate({_id: user._id}, {verified: true });
+    await Token.findOneAndDelete({_id: token._id});
 
     res.send("email verified sucessfully");
   } catch (error) {
+    res.send(error.message)
     res.status(400).send("An error occured");
   }
 };
