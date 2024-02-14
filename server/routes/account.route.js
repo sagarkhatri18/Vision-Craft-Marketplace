@@ -1,8 +1,15 @@
-var router = require('express').Router()
-var accountController = require('../controllers/account.controller')
+var router = require("express").Router();
+var accountController = require("../controllers/account.controller");
 
-router.post('/login', accountController.login)
-router.post('/register', accountController.register)
-router.get('/account/verify/:id/:token', accountController.verify)
+const { validateRegistration, validate } = require("../middlewares/validator");
 
-module.exports = router
+router.post("/login", accountController.login);
+router.post(
+  "/register",
+  validateRegistration,
+  validate,
+  accountController.register
+);
+router.get("/account/verify/:id/:token", accountController.verify);
+
+module.exports = router;

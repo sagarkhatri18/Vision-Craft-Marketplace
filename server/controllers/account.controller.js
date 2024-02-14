@@ -17,7 +17,7 @@ exports.login = async (req, res, next) => {
     }
 
     // check if the email is valid
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email });
     if (!user) {
       return res.status(400).json({
         success: false,
@@ -59,8 +59,8 @@ exports.login = async (req, res, next) => {
 exports.register = async (req, res, next) => {
   try {
     const reqParam = req.body;
-    
-    let user = await User.create({
+
+    let userData = await User.create({
       firstname: reqParam.firstname,
       lastname: reqParam.lastname,
       email: reqParam.email,
@@ -71,10 +71,11 @@ exports.register = async (req, res, next) => {
       verified: reqParam.verified,
     })
       .then(async (data) => {
+        console.log(data._id)
         // save in the token table
         let token = await Token.create({
-          userId: user._id,
-          token: crypto.randomBytes(32).toString("hex"),
+          userId: data._id,
+          token: require('crypto').randomBytes(32).toString('hex'),
         });
 
         const emailData = {
@@ -90,13 +91,11 @@ exports.register = async (req, res, next) => {
         });
       })
       .catch((error) => {
-        res
-          .status(400)
-          .json({
-            message: "Failed to register",
-            error: error,
-            success: false,
-          });
+        res.status(400).json({
+          message: "Failed to register",
+          error: error,
+          success: false,
+        });
       });
   } catch (error) {
     return res.status(400).json({

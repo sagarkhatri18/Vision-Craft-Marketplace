@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Nav } from "react-bootstrap";
 import { register } from "../../src/services/Services";
+import { errorResponse } from "../helpers/responseHolder";
 
 // Validator Packages
 import SimpleReactValidator from "simple-react-validator";
@@ -60,7 +61,7 @@ const Register = () => {
         contact: null,
         address: null,
         role: "customer",
-        verified: false
+        verified: false,
       };
       register(formData)
         .then((res) => {
@@ -68,9 +69,7 @@ const Register = () => {
           toast.success(response.message);
         })
         .catch((error) => {
-          if (error.response.data.message != undefined)
-            toast.error(error.response.data.message);
-          else toast.error("Registration failed");
+          errorResponse(error);
         });
     } else {
       validator.showMessages();

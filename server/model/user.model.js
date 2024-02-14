@@ -21,7 +21,6 @@ const userSchema = new mongoose.Schema(
     },
     contact: {
       type: Number,
-      unique: true,
       //min: 10,
       //max: 10,
     },
