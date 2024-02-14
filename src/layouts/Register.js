@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Nav } from "react-bootstrap";
+import { register } from "../../src/services/Services";
+
 // Validator Packages
 import SimpleReactValidator from "simple-react-validator";
+
+// For Toastr
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import backgroundImage from "../assets/img/login-banner.avif";
 
@@ -46,8 +52,26 @@ const Register = () => {
     event.preventDefault();
 
     if (validator.allValid()) {
-      console.log(state);
-      return false;
+      const formData = {
+        firstname: state.firstname,
+        lastname: state.lastname,
+        email: state.email,
+        password: state.password,
+        contact: null,
+        address: null,
+        role: "customer",
+        verified: false
+      };
+      register(formData)
+        .then((res) => {
+          const response = res.data;
+          toast.success(response.message);
+        })
+        .catch((error) => {
+          if (error.response.data.message != undefined)
+            toast.error(error.response.data.message);
+          else toast.error("Registration failed");
+        });
     } else {
       validator.showMessages();
       forceUpdate(1);
@@ -198,6 +222,7 @@ const Register = () => {
             </div>
           </div>
         </main>
+        <ToastContainer />
       </div>
     </>
   );
