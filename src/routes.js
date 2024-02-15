@@ -1,5 +1,5 @@
-import Dashboard from "views/Dashboard.js";
-// import UserProfile from "views/UserProfile.js";
+// import Dashboard from "./views/Dashboard";
+// import Category from "./views/Category";
 // import TableList from "views/TableList.js";
 // import Typography from "views/Typography.js";
 // import Icons from "views/Icons.js";
@@ -7,21 +7,26 @@ import Dashboard from "views/Dashboard.js";
 // import Notifications from "views/Notifications.js";
 // import Upgrade from "views/Upgrade.js";
 
-const dashboardRoutes = [
+import {lazy} from "react";
+
+const Dashboard = lazy(() => import("./views/Dashboard"));
+const Category = lazy(() => import("./views/Category"));
+
+const routes = [
   {
     path: "/dashboard",
     name: "Dashboard",
     icon: "nc-icon nc-chart-pie-35",
-    component: Dashboard,
+    element: Dashboard,
     layout: "/user"
   },
-  // {
-  //   path: "/user",
-  //   name: "User Profile",
-  //   icon: "nc-icon nc-circle-09",
-  //   component: UserProfile,
-  //   layout: "/admin"
-  // },
+  {
+    path: "/category",
+    name: "Category",
+    icon: "nc-icon nc-notes",
+    element: Category,
+    layout: "/user"
+  },
   // {
   //   path: "/table",
   //   name: "Table List",
@@ -59,4 +64,4 @@ const dashboardRoutes = [
   // }
 ];
 
-export default dashboardRoutes;
+export default routes;

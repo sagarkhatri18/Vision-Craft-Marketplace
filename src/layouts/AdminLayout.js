@@ -1,19 +1,15 @@
 import React, { Component } from "react";
 import { useLocation, Route, Routes } from "react-router-dom";
-
-import AdminNavbar from "components/Navbars/AdminNavbar";
-import Footer from "components/Footer/Footer";
-import Sidebar from "components/Sidebar/Sidebar";
+import AdminNavbar from "../components/Navbars/AdminNavbar";
+import Footer from "../components/Footer/Footer";
+import Sidebar from "../components/Sidebar/Sidebar";
 // import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
-
-import routes from "routes.js";
-
-import sidebarImage from "assets/img/sidebar-3.jpg";
-
+import routes from "../routes";
+import sidebarImage from "../assets/img/sidebar-3.jpg";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function Admin() {
+const AdminLayout = () => {
   const [image, setImage] = React.useState(sidebarImage);
   const [color, setColor] = React.useState("black");
   const [hasImage, setHasImage] = React.useState(true);
@@ -25,7 +21,8 @@ function Admin() {
         return (
           <Route
             path={prop.layout + prop.path}
-            render={(props) => <prop.component {...props} />}
+            element={<prop.element />}
+            name={prop.name}
             key={key}
           />
         );
@@ -70,6 +67,6 @@ function Admin() {
       /> */}
     </>
   );
-}
+};
 
-export default Admin;
+export default AdminLayout;

@@ -19,6 +19,7 @@ function Dashboard() {
     <>
       <Container fluid>
         <Row>
+          <h2>test</h2>
           {/* <Col lg="3" sm="6">
             <Card className="card-stats">
               <Card.Body>
