@@ -1,26 +1,12 @@
 import React from "react";
-import {
-  Badge,
-  Button,
-  Card,
-  Navbar,
-  Nav,
-  Table,
-  Container,
-  Row,
-  Col,
-  Form,
-  OverlayTrigger,
-  Tooltip,
-} from "react-bootstrap";
+import { Card, Container, Row, Col } from "react-bootstrap";
 
 function Dashboard() {
   return (
     <>
       <Container fluid>
         <Row>
-          <h2>test</h2>
-          {/* <Col lg="3" sm="6">
+          <Col lg="3" sm="6">
             <Card className="card-stats">
               <Card.Body>
                 <Row>
@@ -45,7 +31,7 @@ function Dashboard() {
                 </div>
               </Card.Footer>
             </Card>
-          </Col> */}
+          </Col>
         </Row>
       </Container>
     </>

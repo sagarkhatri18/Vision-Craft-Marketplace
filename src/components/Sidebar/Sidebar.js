@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { useLocation, NavLink } from "react-router-dom";
-
 import { Nav } from "react-bootstrap";
-
 import logo from "assets/img/logo.png";
+import { loggedInRole } from "../../helpers/IsLoggedIn";
 
 function Sidebar({ color, image, routes }) {
   const location = useLocation();
+  
   const activeRoute = (routeName) => {
     return location.pathname.indexOf(routeName) > -1 ? "active" : "";
   };
@@ -15,29 +15,31 @@ function Sidebar({ color, image, routes }) {
       <div className="sidebar-background" />
       <div className="sidebar-wrapper">
         <div className="logo d-flex align-items-center justify-content-start">
-          <a href="javascript:void(0)" className="simple-text logo-mini mx-1">
+          <a href="#" className="simple-text logo-mini mx-1">
             <div className="logo-img">
               <img src={logo} alt="..." />
             </div>
           </a>
-          <a className="simple-text" href="javascript:void(0)">
+          <a className="simple-text" href="#">
             Vision Craft Marketplace
           </a>
         </div>
         <Nav>
           {routes.map((prop, key) => {
-            if (!prop.redirect)
+            const checkRole = prop.access.includes(loggedInRole());
+
+            if (!prop.redirect && prop.sidebar && checkRole)
               return (
                 <li
                   className={
                     prop.upgrade
                       ? "active active-pro"
-                      : activeRoute(prop.layout + prop.path)
+                      : activeRoute(prop.path)
                   }
                   key={key}
                 >
                   <NavLink
-                    to={prop.layout + prop.path}
+                    to={prop.path}
                     // className="nav-link"
 
                     className={(navData) => (navData.isActive ? "nav-link active-style" : 'nav-link')}

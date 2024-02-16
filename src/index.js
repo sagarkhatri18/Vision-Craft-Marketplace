@@ -5,8 +5,8 @@ import App from "./App";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <React.Suspense fallback={<div>Loading...</div>}>
+    {/* <React.Suspense fallback={<div>Loading...</div>}> */}
       <App />
-    </React.Suspense>
+    {/* </React.Suspense> */}
   </React.StrictMode>
 );

@@ -31,7 +31,7 @@ class Footer extends Component {
             </ul>
             <p className="copyright text-center">
               © {new Date().getFullYear()}{" "}
-              <a href="javascript:void(0)">Vision Craft Marketplace</a>
+              <a href="#">Vision Craft Marketplace</a>
             </p>
           </nav>
         </Container>

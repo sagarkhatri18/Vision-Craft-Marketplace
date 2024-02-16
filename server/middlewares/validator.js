@@ -24,6 +24,12 @@ const validateRegistration = [
   // Add more validation rules as needed
 ];
 
+// validate add category form
+const validateCategory = [
+  body("name").notEmpty().withMessage("Name field is required"),
+  body("slug").notEmpty().withMessage("Slug field is required")
+]
+
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -36,5 +42,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
   validateRegistration,
+  validateCategory,
   validate,
 };

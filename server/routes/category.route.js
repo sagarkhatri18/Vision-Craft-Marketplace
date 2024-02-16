@@ -1,13 +1,8 @@
 var router = require("express").Router();
-var categoryController = require("../controllers/account.controller");
+var categoryController = require("../controllers/category.controller");
 
-const { validateRegistration, validate } = require("../middlewares/validator");
+const { validateCategory, validate } = require("../middlewares/validator");
 
-router.post(
-  "/category",
-  validateRegistration,
-  validate,
-  categoryController.add
-);
+router.post("/", validateCategory, validate, categoryController.add);
 
 module.exports = router;

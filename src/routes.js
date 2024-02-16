@@ -1,31 +1,39 @@
-// import Dashboard from "./views/Dashboard";
-// import Category from "./views/Category";
-// import TableList from "views/TableList.js";
-// import Typography from "views/Typography.js";
-// import Icons from "views/Icons.js";
-// import Maps from "views/Maps.js";
-// import Notifications from "views/Notifications.js";
-// import Upgrade from "views/Upgrade.js";
+import React from "react";
 
-import {lazy} from "react";
+const Dashboard = React.lazy(() => import("./views/Dashboard"));
+const Category = React.lazy(() => import("./views/pages/category/Category"));
+const AddCategory = React.lazy(() =>
+  import("./views/pages/category/AddCategory")
+);
 
-const Dashboard = lazy(() => import("./views/Dashboard"));
-const Category = lazy(() => import("./views/Category"));
+const All = ["customer", "admin"];
+const Admin = ["admin"];
+const Customer = ["customer"];
 
 const routes = [
   {
     path: "/dashboard",
     name: "Dashboard",
+    sidebar: true,
     icon: "nc-icon nc-chart-pie-35",
     element: Dashboard,
-    layout: "/user"
+    access: All,
   },
   {
     path: "/category",
     name: "Category",
+    sidebar: true,
     icon: "nc-icon nc-notes",
     element: Category,
-    layout: "/user"
+    access: Admin,
+  },
+  {
+    path: "/category/add",
+    name: "Add Category",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: AddCategory,
+    access: Admin,
   },
   // {
   //   path: "/table",

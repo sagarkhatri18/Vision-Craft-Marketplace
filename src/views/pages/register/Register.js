@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Nav } from "react-bootstrap";
-import bcrypt from 'bcryptjs'
-import { register } from "../../src/services/Services";
-import { errorResponse } from "../helpers/responseHolder";
+import bcrypt from "bcryptjs";
+import { register } from "../../../../src/services/Services";
+import "../../../assets/css/login/material-dashboard.min.css";
+import { errorResponse } from "../../../helpers/responseHolder";
 // Validator Packages
 import SimpleReactValidator from "simple-react-validator";
 // For Toastr
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import backgroundImage from "../assets/img/login-banner.avif";
+import backgroundImage from "../../../assets/img/login-banner.avif";
 
 const Register = () => {
   // Validator Imports
@@ -55,7 +56,10 @@ const Register = () => {
         firstname: state.firstname,
         lastname: state.lastname,
         email: state.email,
-        password: bcrypt.hashSync(state.password, '$2a$10$CwTycUXWue0Thq9StjUM0u'),
+        password: bcrypt.hashSync(
+          state.password,
+          "$2a$10$CwTycUXWue0Thq9StjUM0u"
+        ),
         contact: null,
         address: null,
         role: "customer",

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Nav } from "react-bootstrap";
-import { login } from "../../src/services/Services";
+import { login } from "../../../../src/services/Services";
 import { useNavigate } from "react-router-dom";
-import "../assets/css/login/material-dashboard.min.css";
-import backgroundImage from "../assets/img/login-banner.avif";
+import "../../../assets/css/login/material-dashboard.min.css";
+import backgroundImage from "../../../assets/img/login-banner.avif";
 // For Toastr
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -34,7 +34,7 @@ const Login = () => {
 
     if (validator.allValid()) {
       const email = state.email;
-      const password = state.password // hash the password
+      const password = state.password
 
       login(email, password)
         .then((res) => {
@@ -43,7 +43,7 @@ const Login = () => {
           if (response.success) {
             const token = response.token;
             localStorage.setItem("token", token);
-            navigate("/user/dashboard");
+            navigate("/dashboard");
           } else {
             toast.error("Invalid email or Password");
           }

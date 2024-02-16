@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { useLocation, Route, Routes } from "react-router-dom";
+import { useLocation, Route, Routes, Navigate } from "react-router-dom";
 import AdminNavbar from "../components/Navbars/AdminNavbar";
 import Footer from "../components/Footer/Footer";
 import Sidebar from "../components/Sidebar/Sidebar";
@@ -8,6 +8,7 @@ import routes from "../routes";
 import sidebarImage from "../assets/img/sidebar-3.jpg";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { loggedInRole } from "../helpers/IsLoggedIn";
 
 const AdminLayout = () => {
   const [image, setImage] = React.useState(sidebarImage);
@@ -15,20 +16,19 @@ const AdminLayout = () => {
   const [hasImage, setHasImage] = React.useState(true);
   const location = useLocation();
   const mainPanel = React.useRef(null);
+
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
-      if (prop.layout === "/user") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            element={<prop.element />}
-            name={prop.name}
-            key={key}
-          />
-        );
-      } else {
-        return null;
-      }
+      const checkRole = prop.access.includes(loggedInRole());
+
+      return (
+        <Route
+          path={prop.path}
+          element={checkRole ? <prop.element /> : <Navigate to="/dashboard" />}
+          name={prop.name}
+          key={key}
+        />
+      );
     });
   };
   React.useEffect(() => {
