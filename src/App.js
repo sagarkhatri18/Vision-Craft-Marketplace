@@ -7,6 +7,15 @@ import "./assets/css/demo.css";
 import "./assets/css/custom.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
+import alertify from "alertifyjs";
+import "alertifyjs/build/css/alertify.css";
+
+//override defaults of alertifyjs
+alertify.defaults.transition = "slide";
+alertify.defaults.theme.ok = "btn btn-sm btn-primary";
+alertify.defaults.theme.cancel = "btn btn-sm btn-danger";
+alertify.defaults.theme.input = "form-control";
+
 // Pages
 const DefaultLayout = React.lazy(() => import("./layouts/DefaultLayout"));
 const Login = React.lazy(() => import("./views/pages/login/Login"));

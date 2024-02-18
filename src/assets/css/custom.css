@@ -19,3 +19,14 @@ form.login-form input.form-control {
   font-size: 13px;
   color: red;
 }
+
+.btn-borderless {
+  border: unset;
+}
+
+.form-check .form-check-label {
+  padding-left: 0 !important;
+}
+.form-check-inline {
+  margin-right: 3.75rem !important;
+}

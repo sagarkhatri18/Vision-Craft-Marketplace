@@ -3,7 +3,10 @@ import React from "react";
 const Dashboard = React.lazy(() => import("./views/Dashboard"));
 const Category = React.lazy(() => import("./views/pages/category/Category"));
 const AddCategory = React.lazy(() =>
-  import("./views/pages/category/AddCategory")
+  import("./views/pages/category/Create")
+);
+const UpdateCategory = React.lazy(() =>
+  import("./views/pages/category/Update")
 );
 
 const All = ["customer", "admin"];
@@ -28,11 +31,19 @@ const routes = [
     access: Admin,
   },
   {
-    path: "/category/add",
+    path: "/category/create",
     name: "Add Category",
     sidebar: false,
     icon: "nc-icon nc-notes",
     element: AddCategory,
+    access: Admin,
+  },
+  {
+    path: "/category/update/:id",
+    name: "Update Category",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: UpdateCategory,
     access: Admin,
   },
   // {

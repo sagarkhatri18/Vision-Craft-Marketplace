@@ -9,7 +9,8 @@ function Dashboard() {
           <Col lg="3" sm="6">
             <Card className="card-stats">
               <Card.Body>
-                <Row>
+                <h4>Dashboard</h4>
+                {/* <Row>
                   <Col xs="5">
                     <div className="icon-big text-center icon-warning">
                       <i className="nc-icon nc-favourite-28 text-primary"></i>
@@ -21,15 +22,15 @@ function Dashboard() {
                       <Card.Title as="h4">+45K</Card.Title>
                     </div>
                   </Col>
-                </Row>
+                </Row> */}
               </Card.Body>
-              <Card.Footer>
+              {/* <Card.Footer>
                 <hr></hr>
                 <div className="stats">
                   <i className="fas fa-redo mr-1"></i>
                   Update now
                 </div>
-              </Card.Footer>
+              </Card.Footer> */}
             </Card>
           </Col>
         </Row>

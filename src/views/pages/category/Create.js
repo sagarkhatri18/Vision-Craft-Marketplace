@@ -7,12 +7,13 @@ import { Error } from "../../../helpers/Error";
 import { toast } from "react-toastify";
 import { add } from "../../../services/Category";
 
-const AddCategory = () => {
+const Create = () => {
   const navigate = useNavigate();
 
   // set state
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
+  const [isActive, setIsActive] = useState(true);
   const [error, setError] = useState("");
 
   // Validator Imports
@@ -24,6 +25,12 @@ const AddCategory = () => {
     setName(e.target.value);
     const slug = convertToSlug(e.target.value);
     setSlug(slug);
+  };
+
+  // handle on change is active
+  const handleIsActiveChange = (e) => {
+    const value = e.target.value == "1" ? true : false;
+    setIsActive(value);
   };
 
   const convertToSlug = (Text) => {
@@ -38,7 +45,7 @@ const AddCategory = () => {
     const formData = {
       name: name,
       slug: slug,
-      is_active: true,
+      is_active: isActive,
     };
     if (validator.allValid()) {
       add(formData)
@@ -71,6 +78,7 @@ const AddCategory = () => {
                         <label>Name</label>
                         <Form.Control
                           placeholder="Name"
+                          name="name"
                           onChange={handleNameChange}
                           type="text"
                         ></Form.Control>
@@ -83,9 +91,37 @@ const AddCategory = () => {
                         <Form.Control
                           placeholder="Slug"
                           value={slug}
+                          name="slug"
                           disabled
                           type="text"
                         ></Form.Control>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="pr-1" md="6">
+                      <Form.Group>
+                        <label>Is Active?</label>
+                        <br></br>
+                        <Form.Check
+                          inline
+                          type="radio"
+                          label="Yes"
+                          name="is_active"
+                          id="yes"
+                          value="1"
+                          onChange={handleIsActiveChange}
+                          defaultChecked={true}
+                        />
+                        <Form.Check
+                          inline
+                          type="radio"
+                          label="No"
+                          onChange={handleIsActiveChange}
+                          name="is_active"
+                          value="0"
+                          id="no"
+                        />
                       </Form.Group>
                     </Col>
                   </Row>
@@ -108,4 +144,4 @@ const AddCategory = () => {
   );
 };
 
-export default AddCategory;
+export default Create;
