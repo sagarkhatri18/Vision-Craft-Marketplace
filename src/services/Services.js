@@ -11,8 +11,8 @@ export const login = async (email, password) => {
 //handle the register API
 export const register = async (data) => {
   return axios.post(process.env.REACT_APP_API_URL + `register`, {
-    firstname: data.firstname,
-    lastname: data.lastname,
+    firstName: data.firstName,
+    lastName: data.lastName,
     email: data.email,
     password: data.password,
     contact: data.contact,

@@ -6,11 +6,14 @@ import "primeflex/primeflex.css"; // css utility
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.css"; // core css
 
+import { Provider } from "react-redux";
+import { store } from "./store";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    {/* <React.Suspense fallback={<div>Loading...</div>}> */}
+    <Provider store={store()}>
       <App />
-    {/* </React.Suspense> */}
+    </Provider>
   </React.StrictMode>
 );

@@ -1,16 +1,61 @@
-const User = require("../model/user.model");
+const { User } = require("../model/user.model");
 
+// list all the users
 exports.index = async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).sort({
+      created_at: "descending",
+    });
     res.status(200).json(users);
   } catch (error) {
-    console.error(error);
-    res.status(500).send(error);
-
     res.status(500).send({
       success: false,
       message: "Something went Wrong",
+    });
+  }
+};
+
+// fetch the particular user by id
+exports.find = async (req, res) => {
+  const _id = req.params.id;
+
+  try {
+    const user = await User.findOne({ _id });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Sorry no any user found",
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: "Data found",
+        data: user,
+      });
+    }
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Something went Wrong",
+    });
+  }
+};
+
+// delete user from id
+exports.delete = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    await User.deleteOne({ _id: id });
+
+    return res.status(200).json({
+      success: true,
+      message: "User has been successfully deleted",
+    });
+  } catch {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete the selected user",
     });
   }
 };

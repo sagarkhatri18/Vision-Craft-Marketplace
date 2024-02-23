@@ -134,7 +134,7 @@ const Header = () => {
                 <span className="no-icon">Account</span>
               </Nav.Link>
             </Nav.Item> */}
-            <Dropdown as={Nav.Item} align="end">
+            <Dropdown as={Nav.Item}>
               <Dropdown.Toggle
                 aria-expanded={false}
                 aria-haspopup={true}
@@ -159,7 +159,7 @@ const Header = () => {
                 <Dropdown.Item href="/login" onClick={() => Logout()}>
                   Logout
                 </Dropdown.Item>
-                <Dropdown.Item
+                {/* <Dropdown.Item
                   href="#pablo"
                   onClick={(e) => e.preventDefault()}
                 >
@@ -183,7 +183,7 @@ const Header = () => {
                   onClick={(e) => e.preventDefault()}
                 >
                   Separated link
-                </Dropdown.Item>
+                </Dropdown.Item> */}
               </Dropdown.Menu>
             </Dropdown>
             <Nav.Item>

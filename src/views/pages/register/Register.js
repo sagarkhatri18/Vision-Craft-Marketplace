@@ -9,9 +9,14 @@ import SimpleReactValidator from "simple-react-validator";
 // For Toastr
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "../../../helpers/Loading";
 import backgroundImage from "../../../assets/img/login-banner.avif";
+import { useDispatch } from "react-redux";
+import { showLoader, hideLoader } from "../../../actions/Action";
 
 const Register = () => {
+  const dispatch = useDispatch();
+
   // Validator Imports
   let validator = useRef(
     new SimpleReactValidator({
@@ -33,12 +38,13 @@ const Register = () => {
   const [, forceUpdate] = useState();
 
   const [state, setState] = useState({
-    firstname: "",
-    lastname: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     password_confirmation: "",
   });
+  const [callBackResponse, setCallBackResponse] = useState("");
 
   const handleChange = (e) => {
     setState((prevState) => ({
@@ -50,11 +56,12 @@ const Register = () => {
   // handle the form submission part
   const handleSubmit = (event) => {
     event.preventDefault();
+    dispatch(showLoader());
 
     if (validator.allValid()) {
       const formData = {
-        firstname: state.firstname,
-        lastname: state.lastname,
+        firstName: state.firstName,
+        lastName: state.lastName,
         email: state.email,
         password: bcrypt.hashSync(
           state.password,
@@ -65,15 +72,30 @@ const Register = () => {
         role: "customer",
         verified: false,
       };
+
       register(formData)
         .then((res) => {
+          dispatch(hideLoader());
+
           const response = res.data;
           toast.success(response.message);
+
+          const responseHolder = `User has been successfully registered. Please check your email for activation`;
+          setCallBackResponse(responseHolder);
+          setState({
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            password_confirmation: "",
+          });
         })
         .catch((error) => {
+          dispatch(hideLoader());
           errorResponse(error);
         });
     } else {
+      dispatch(hideLoader());
       validator.showMessages();
       forceUpdate(1);
     }
@@ -111,6 +133,17 @@ const Register = () => {
                       </div>
                     </div>
                     <div className="card-body">
+                      <div
+                        className="alert alert-success"
+                        role="alert"
+                        id="responseHolder"
+                        style={{
+                          display: callBackResponse ? "block" : "none",
+                          color: "white",
+                        }}
+                      >
+                        {callBackResponse}
+                      </div>
                       <form
                         role="form"
                         className="login-form text-start"
@@ -119,32 +152,16 @@ const Register = () => {
                         <div className="input-group input-group-outline my-3">
                           <label className="form-label"></label>
                           <input
-                            type="firstname"
-                            name="firstname"
-                            value={state.firstname}
+                            type="text"
+                            name="firstName"
+                            value={state.firstName}
                             onChange={handleChange}
                             className="form-control"
                             placeholder="Enter your first name"
                           />
                           {validator.message(
-                            "firstname",
-                            state.firstname,
-                            "required|alpha"
-                          )}
-                        </div>
-                        <div className="input-group input-group-outline my-3">
-                          <label className="form-label"></label>
-                          <input
-                            type="lastname"
-                            name="lastname"
-                            value={state.lastname}
-                            onChange={handleChange}
-                            className="form-control"
-                            placeholder="Enter your last name"
-                          />
-                          {validator.message(
-                            "lastname",
-                            state.lastname,
+                            "firstName",
+                            state.firstName,
                             "required|alpha"
                           )}
                         </div>
@@ -152,6 +169,22 @@ const Register = () => {
                           <label className="form-label"></label>
                           <input
                             type="text"
+                            name="lastName"
+                            value={state.lastName}
+                            onChange={handleChange}
+                            className="form-control"
+                            placeholder="Enter your last name"
+                          />
+                          {validator.message(
+                            "lastName",
+                            state.lastName,
+                            "required|alpha"
+                          )}
+                        </div>
+                        <div className="input-group input-group-outline my-3">
+                          <label className="form-label"></label>
+                          <input
+                            type="email"
                             name="email"
                             value={state.email}
                             onChange={handleChange}
@@ -223,6 +256,7 @@ const Register = () => {
             </div>
           </div>
         </main>
+        <Loader />
         <ToastContainer />
       </div>
     </>

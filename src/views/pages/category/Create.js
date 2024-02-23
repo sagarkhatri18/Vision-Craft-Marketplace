@@ -6,9 +6,12 @@ import SimpleReactValidator from "simple-react-validator";
 import { Error } from "../../../helpers/Error";
 import { toast } from "react-toastify";
 import { add } from "../../../services/Category";
+import { useDispatch } from "react-redux";
+import { showLoader, hideLoader } from "../../../actions/Action";
 
 const Create = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // set state
   const [name, setName] = useState("");
@@ -41,6 +44,8 @@ const Create = () => {
 
   // handle form submit
   const handleSubmit = (event) => {
+    dispatch(showLoader());
+
     event.preventDefault();
     const formData = {
       name: name,
@@ -54,10 +59,12 @@ const Create = () => {
           navigate("/category");
         })
         .catch((error) => {
+          dispatch(hideLoader());
           setError(error.response.data);
           toast.error("Error occured while sending data");
         });
     } else {
+      dispatch(hideLoader());
       validator.showMessages();
       forceUpdate(1);
     }
@@ -70,6 +77,7 @@ const Create = () => {
           <Col md="12">
             <Error errors={error} />
             <Card className="card-stats">
+              <Card.Header>Add New Category</Card.Header>
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Row>

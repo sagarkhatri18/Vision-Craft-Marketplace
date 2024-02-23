@@ -3,10 +3,10 @@ const { User } = require("../model/user.model");
 
 // validate user registration form
 const validateRegistration = [
-  body("firstname")
+  body("firstName")
     .isLength({ min: 3 })
     .withMessage("First name must be at least 3 characters long"),
-  body("lastname")
+  body("lastName")
     .isLength({ min: 3 })
     .withMessage("Last name must be at least 3 characters long"),
   body("email")

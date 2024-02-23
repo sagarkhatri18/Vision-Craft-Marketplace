@@ -4,7 +4,7 @@ const { Category } = require("../model/category.model");
 exports.index = async (req, res) => {
   try {
     const categories = await Category.find({}).sort({
-      created_at: "descending",
+      createdAt: "descending",
     });
     res.status(200).json(categories);
   } catch (error) {
@@ -21,7 +21,7 @@ exports.add = async (req, res, next) => {
   await Category.create({
     name: reqParam.name,
     slug: reqParam.slug,
-    is_active: reqParam.is_active,
+    isActive: reqParam.isActive,
   })
     .then((data) => {
       res.status(200).send({
@@ -44,7 +44,7 @@ exports.update = async (req, res) => {
   const updateData = {
     name: reqParam.name,
     slug: reqParam.slug,
-    is_active: reqParam.is_active,
+    isActive: reqParam.isActive,
   };
 
   console.log(updateData)

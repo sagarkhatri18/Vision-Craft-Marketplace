@@ -68,8 +68,8 @@ exports.register = async (req, res, next) => {
     const reqParam = req.body;
 
     let userData = await User.create({
-      firstname: reqParam.firstname,
-      lastname: reqParam.lastname,
+      firstName: reqParam.firstName,
+      lastName: reqParam.lastName,
       email: reqParam.email,
       password: reqParam.password,
       contact: reqParam.contact,
@@ -78,7 +78,6 @@ exports.register = async (req, res, next) => {
       verified: reqParam.verified,
     })
       .then(async (data) => {
-        console.log(data._id);
         // save in the token table
         let token = await Token.create({
           userId: data._id,
@@ -86,7 +85,7 @@ exports.register = async (req, res, next) => {
         });
 
         const emailData = {
-          name: `${reqParam.firstname} ${reqParam.lastname}`,
+          name: `${reqParam.firstName} ${reqParam.lastName}`,
           mail: reqParam.email,
           subject: "Verify Email",
         };

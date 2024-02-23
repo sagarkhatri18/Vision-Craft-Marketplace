@@ -6,10 +6,13 @@ import SimpleReactValidator from "simple-react-validator";
 import { Error } from "../../../helpers/Error";
 import { toast } from "react-toastify";
 import { updateCategory, findCategory } from "../../../services/Category";
+import { useDispatch } from "react-redux";
+import { showLoader, hideLoader } from "../../../actions/Action";
 
 const Update = () => {
   const navigate = useNavigate();
   const params = useParams();
+  const dispatch = useDispatch();
 
   // set state
   const [state, setState] = useState({
@@ -56,6 +59,7 @@ const Update = () => {
   // handle form submit
   const handleSubmit = (event) => {
     event.preventDefault();
+    dispatch(showLoader());
     const formData = {
       name: state.name,
       slug: state.slug,
@@ -69,10 +73,12 @@ const Update = () => {
           navigate("/category");
         })
         .catch((error) => {
+          dispatch(hideLoader());
           setError(error.response.data);
           toast.error("Error occured while sending data");
         });
     } else {
+      dispatch(hideLoader());
       validator.showMessages();
       forceUpdate(1);
     }
@@ -80,12 +86,15 @@ const Update = () => {
 
   // find category from id
   const findCategoryFromId = useCallback(() => {
+    dispatch(showLoader());
     findCategory(params.id)
       .then((data) => {
+        dispatch(hideLoader());
         const returnData = data.data.data;
         setState(returnData);
       })
       .catch((error) => {
+        dispatch(hideLoader());
         toast.error("Error occured while fetching data");
       });
   }, [params.id]);
@@ -101,6 +110,8 @@ const Update = () => {
           <Col md="12">
             <Error errors={error} />
             <Card className="card-stats">
+              <Card.Header>Update Category</Card.Header>
+
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Row>

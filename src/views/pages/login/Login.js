@@ -9,9 +9,13 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // Validator Packages
 import SimpleReactValidator from "simple-react-validator";
+import Loader from "../../../helpers/Loading";
+import { useDispatch } from "react-redux";
+import { showLoader, hideLoader } from "../../../actions/Action";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Validator Imports
   const validator = useRef(new SimpleReactValidator()).current;
@@ -31,6 +35,7 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    dispatch(showLoader());
 
     if (validator.allValid()) {
       const email = state.email;
@@ -41,10 +46,12 @@ const Login = () => {
           const response = res.data;
 
           if (response.success) {
+            dispatch(hideLoader());
             const token = response.token;
             localStorage.setItem("token", token);
             navigate("/dashboard");
           } else {
+            dispatch(hideLoader());
             toast.error("Invalid email or Password");
           }
         })
@@ -52,8 +59,10 @@ const Login = () => {
           if (error.response.data.message != undefined)
             toast.error(error.response.data.message);
           else toast.error("Login failed");
+          dispatch(hideLoader());
         });
     } else {
+      dispatch(hideLoader());
       validator.showMessages();
       forceUpdate(1);
     }
@@ -134,6 +143,15 @@ const Login = () => {
                           </button>
                         </div>
                         <p className="mt-4 text-sm text-center">
+                          Or Start using &nbsp;
+                          <a
+                            href="/dashboard"
+                            className="text-primary text-gradient font-weight-bold"
+                          >
+                            Guest Login
+                          </a>
+                        </p>
+                        <p className="mt-4 text-sm text-center">
                           Don't have an account?&nbsp;
                           <a
                             href="/register"
@@ -150,6 +168,7 @@ const Login = () => {
             </div>
           </div>
         </main>
+        <Loader />
         <ToastContainer />
       </div>
     </>

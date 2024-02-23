@@ -9,6 +9,7 @@ import sidebarImage from "../assets/img/sidebar-3.jpg";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { loggedInRole } from "../helpers/IsLoggedIn";
+import Loader from "../helpers/Loading";
 
 const AdminLayout = () => {
   const [image, setImage] = React.useState(sidebarImage);
@@ -19,7 +20,7 @@ const AdminLayout = () => {
 
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
-      const checkRole = prop.access.includes(loggedInRole());
+      const checkRole = prop.access.includes(loggedInRole().toLowerCase());
 
       return (
         <Route
@@ -56,6 +57,7 @@ const AdminLayout = () => {
           <Footer />
         </div>
         <ToastContainer />
+        <Loader/>
       </div>
       {/* <FixedPlugin
         hasImage={hasImage}

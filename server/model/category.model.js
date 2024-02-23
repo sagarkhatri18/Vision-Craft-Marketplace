@@ -1,25 +1,22 @@
 const mongoose = require("mongoose");
 
-const categorySchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      unique: true,
-      required: true,
-    },
-    slug: {
-      type: String,
-      unique: true,
-      required: true,
-    },
-    is_active: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
+const categorySchema = new mongoose.Schema({
+  name: {
+    type: String,
+    unique: true,
+    required: true,
   },
-  { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
-);
+  slug: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  isActive: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+});
 
 const Category = mongoose.model("Category", categorySchema);
 

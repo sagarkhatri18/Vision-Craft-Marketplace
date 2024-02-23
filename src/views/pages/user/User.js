@@ -4,24 +4,38 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Tag } from "primereact/tag";
-import { getCatgories, deleteCategoryFromId } from "../../../services/Category";
+import {
+  getUsers,
+  deleteUserFromId,
+  getUserById,
+} from "../../../services/User";
 import { toast } from "react-toastify";
 import alertify from "alertifyjs";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { showLoader, hideLoader } from "../../../actions/Action";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import UserDetails from "./UserDetails";
 
-const Category = () => {
+const User = () => {
   const dispatch = useDispatch();
-  const [categories, setCategories] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState(null);
+  const [modalShow, setModalShow] = useState(false);
 
-  const loadCategories = useCallback(() => {
+  const loadUsers = useCallback(() => {
     dispatch(showLoader());
-    getCatgories()
+    getUsers()
       .then((data) => {
         dispatch(hideLoader());
+        const resultArray = [];
         const apiResponse = data.data;
-        setCategories(apiResponse);
+        apiResponse.forEach((item) => {
+          if (item.role != "admin") {
+            resultArray.push(item);
+          }
+        });
+        setUsers(resultArray);
       })
       .catch((error) => {
         dispatch(hideLoader());
@@ -30,22 +44,22 @@ const Category = () => {
   }, []);
 
   useEffect(() => {
-    loadCategories();
-  }, [loadCategories]);
+    loadUsers();
+  }, [loadUsers]);
 
-  // delete the selected category
-  const deleteCategory = (id) => {
+  // delete the selected user
+  const deleteUser = (id) => {
     alertify.confirm(
       "Delete",
-      "Are you sure want to delete the selected category?",
+      "Are you sure want to delete the selected user?",
       function () {
-        deleteCategoryFromId(id)
+        deleteUserFromId(id)
           .then((data) => {
             toast.success(data.data.message);
-            loadCategories();
+            loadUsers();
           })
           .catch((error) => {
-            toast.error("Failed to delete the category");
+            toast.error("Failed to delete the user");
           });
       },
       function () {}
@@ -54,40 +68,68 @@ const Category = () => {
 
   const datatableHeader = (
     <div className="flex flex-wrap align-items-center justify-content-between gap-2">
-      <span className="text-xl text-900 font-bold">Categories</span>
+      <span className="text-xl text-900 font-bold">Users</span>
       <Button icon="pi pi-refresh" rounded raised />
     </div>
   );
 
-  const footer = `In total there are ${
-    categories ? categories.length : 0
-  } categories.`;
+  const footer = `In total there are ${users ? users.length : 0} users.`;
 
-  const formatDate = (category) =>
-    new Date(category.created_at).toLocaleString();
+  const formatDate = (user) => new Date(user.createdAt).toLocaleString();
 
-  const getCategoryStatus = (category) => {
-    const severity = category.is_active ? "success" : "danger";
-    const statusValue = category.is_active ? "ACTIVE" : "INACTIVE";
+  const getUserStatus = (user) => {
+    const severity = user.verified ? "success" : "danger";
+    const statusValue = user.verified ? "VERIFIED" : "PENDING";
     return <Tag value={statusValue} severity={severity} />;
   };
 
-  const actionBodyTemplate = (category) => {
+  // open modal for loading user detail
+  const openModal = (id) => {
+    getUserById(id)
+      .then((data) => {
+        setUser(data.data.data);
+        setModalShow(true);
+      })
+      .catch((error) => {
+        toast.error("Failed to load the user detail");
+      });
+  };
+
+  // close modal for uploaded files list
+  const closeModal = () => setModalShow(false);
+
+  const closeBtn = (
+    <button className="close" onClick={closeModal}>
+      &times;
+    </button>
+  );
+
+  const actionBodyTemplate = (user) => {
     return (
       <>
         <div className="d-inline-flex">
-          <NavLink to={`/category/update/${category._id}`}>
+          <NavLink to={`#`}>
             <Button
               type="button"
+              title="Edit"
               className="btn btn-sm btn-borderless"
               icon="pi pi-pencil"
               rounded
             ></Button>
           </NavLink>
           <Button
-            onClick={() => deleteCategory(category._id)}
+            onClick={() => deleteUser(user._id)}
             type="button"
+            title="Delete"
             icon="pi pi-trash"
+            className="btn btn-sm btn-borderless"
+            rounded
+          ></Button>
+          <Button
+            onClick={() => openModal(user._id)}
+            type="button"
+            title="View Details"
+            icon="pi pi-external-link"
             className="btn btn-sm btn-borderless"
             rounded
           ></Button>
@@ -113,7 +155,7 @@ const Category = () => {
           <div className="col-12">
             <DataTable
               size="small"
-              value={categories}
+              value={users}
               header={datatableHeader}
               footer={footer}
               paginator
@@ -121,9 +163,11 @@ const Category = () => {
               rowsPerPageOptions={[10, 25, 50]}
               tableStyle={{ minWidth: "50rem" }}
             >
-              <Column field="name" sortable header="Name"></Column>
-              <Column field="slug" sortable header="Slug"></Column>
-              <Column body={getCategoryStatus} header="Status"></Column>
+              <Column field="firstName" sortable header="First Name"></Column>
+              <Column field="lastName" sortable header="Last Name"></Column>
+              <Column field="email" sortable header="Email"></Column>
+              <Column body={getUserStatus} header="Status"></Column>
+              <Column field="role" sortable header="Role"></Column>
               <Column body={formatDate} header="Created At"></Column>
               <Column
                 headerStyle={{ width: "5rem", textAlign: "center" }}
@@ -133,9 +177,17 @@ const Category = () => {
             </DataTable>
           </div>
         </Row>
+        <Modal isOpen={modalShow} toggle={closeModal}>
+          <ModalHeader toggle={closeModal} close={closeBtn}>
+            User Detail
+          </ModalHeader>
+          <ModalBody>
+            <UserDetails data={user} />{" "}
+          </ModalBody>
+        </Modal>
       </Container>
     </>
   );
 };
 
-export default Category;
+export default User;

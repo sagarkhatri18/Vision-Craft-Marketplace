@@ -6,7 +6,7 @@ import { loggedInRole } from "../../helpers/IsLoggedIn";
 
 function Sidebar({ color, image, routes }) {
   const location = useLocation();
-  
+
   const activeRoute = (routeName) => {
     return location.pathname.indexOf(routeName) > -1 ? "active" : "";
   };
@@ -26,15 +26,15 @@ function Sidebar({ color, image, routes }) {
         </div>
         <Nav>
           {routes.map((prop, key) => {
-            const checkRole = prop.access.includes(loggedInRole());
+            const checkRole = prop.access.includes(
+              loggedInRole().toLowerCase()
+            );
 
             if (!prop.redirect && prop.sidebar && checkRole)
               return (
                 <li
                   className={
-                    prop.upgrade
-                      ? "active active-pro"
-                      : activeRoute(prop.path)
+                    prop.upgrade ? "active active-pro" : activeRoute(prop.path)
                   }
                   key={key}
                 >
@@ -42,8 +42,10 @@ function Sidebar({ color, image, routes }) {
                     to={prop.path}
                     // className="nav-link"
 
-                    className={(navData) => (navData.isActive ? "nav-link active-style" : 'nav-link')}
-                    
+                    className={(navData) =>
+                      navData.isActive ? "nav-link active-style" : "nav-link"
+                    }
+
                     // activeClassName="active"
                   >
                     <i className={prop.icon} />

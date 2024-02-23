@@ -34,7 +34,7 @@ export const loggedInRole = () => {
 
     return role;
   } else {
-    return "";
+    return "all";
   }
 };
 
