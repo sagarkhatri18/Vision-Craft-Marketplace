@@ -2,13 +2,13 @@ import React from "react";
 
 const Dashboard = React.lazy(() => import("./views/pages/dashboard/Dashboard"));
 const Category = React.lazy(() => import("./views/pages/category/Category"));
-const AddCategory = React.lazy(() =>
-  import("./views/pages/category/Create")
-);
+const AddCategory = React.lazy(() => import("./views/pages/category/Create"));
 const UpdateCategory = React.lazy(() =>
   import("./views/pages/category/Update")
 );
 const User = React.lazy(() => import("./views/pages/user/User"));
+const AddUser = React.lazy(() => import("./views/pages/user/Create"));
+const UpdateUser = React.lazy(() => import("./views/pages/user/Update"));
 
 const All = ["customer", "admin", "all"];
 const Admin = ["admin"];
@@ -53,6 +53,22 @@ const routes = [
     sidebar: true,
     icon: "nc-icon nc-single-02",
     element: User,
+    access: Admin,
+  },
+  {
+    path: "/user/create",
+    name: "Add New User",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: AddUser,
+    access: Admin,
+  },
+  {
+    path: "/user/update/:id",
+    name: "Update User",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: UpdateUser,
     access: Admin,
   },
   // {

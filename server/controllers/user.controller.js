@@ -34,7 +34,7 @@ exports.find = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).send({
+    return res.status(500).send({
       success: false,
       message: "Something went Wrong",
     });
@@ -60,22 +60,67 @@ exports.delete = async (req, res) => {
   }
 };
 
-exports.addNewUser = (req, res) => {
-  const reqParam = req.query;
-  User.create({
-    first_name: reqParam.first_name,
-    last_name: reqParam.last_name,
+// add the new user
+exports.add = async (req, res) => {
+  const reqParam = req.body;
+  await User.create({
+    firstName: reqParam.firstName,
+    lastName: reqParam.lastName,
     email: reqParam.email,
-    country: reqParam.country,
+    password: reqParam.password,
+    contact: reqParam.contact,
+    address: reqParam.address,
+    role: reqParam.role,
+    verified: reqParam.verified,
   })
     .then((data) => {
-      res
-        .status(200)
-        .send({ message: "User has been successfully added", success: true });
+      return res.status(200).json({
+        success: true,
+        message: "User has been successfully added",
+      });
     })
     .catch((error) => {
-      res
-        .status(400)
-        .send({ message: "Failed to add the user", success: false });
+      return res.status(500).json({
+        success: false,
+        message: "Failed to add the user",
+      });
     });
+};
+
+// update user
+exports.update = async (req, res) => {
+  const _id = req.params.id;
+  const reqParam = req.body;
+
+  const updateData = {
+    firstName: reqParam.firstName,
+    lastName: reqParam.lastName,
+    email: reqParam.email,
+    contact: reqParam.contact,
+    address: reqParam.address,
+    role: reqParam.role,
+    verified: reqParam.verified,
+  };
+
+  try {
+    await User.findOneAndUpdate({ _id: _id }, updateData)
+      .exec()
+      .then((user) => {
+        return res.status(200).json({
+          success: true,
+          message: "User has been successfully updated",
+        });
+      })
+      .catch((err) => {
+        return res.status(500).send({
+          success: false,
+          message: "Failed to update the selected user",
+        });
+      });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: "Something went Wrong",
+    });
+  }
 };

@@ -6,9 +6,9 @@ exports.index = async (req, res) => {
     const categories = await Category.find({}).sort({
       createdAt: "descending",
     });
-    res.status(200).json(categories);
+    return res.status(200).json(categories);
   } catch (error) {
-    res.status(500).send({
+    return res.status(500).send({
       success: false,
       message: "Something went Wrong",
     });
@@ -24,13 +24,13 @@ exports.add = async (req, res, next) => {
     isActive: reqParam.isActive,
   })
     .then((data) => {
-      res.status(200).send({
+      return res.status(200).send({
         message: "Category has been successfully added",
         success: true,
       });
     })
     .catch((error) => {
-      res
+      return res
         .status(400)
         .send({ message: "Failed to add the category", success: false });
     });
@@ -47,8 +47,6 @@ exports.update = async (req, res) => {
     isActive: reqParam.isActive,
   };
 
-  console.log(updateData)
-
   try {
     await Category.findOneAndUpdate({ _id: _id }, updateData)
       .exec()
@@ -60,13 +58,13 @@ exports.update = async (req, res) => {
         });
       })
       .catch((err) => {
-        res.status(500).send({
+        return res.status(500).send({
           success: false,
           message: "Failed to update the selected category",
         });
       });
   } catch (error) {
-    res.status(500).send({
+    return res.status(500).send({
       success: false,
       message: "Something went Wrong",
     });
@@ -111,7 +109,7 @@ exports.find = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).send({
+    return res.status(500).send({
       success: false,
       message: "Something went Wrong",
     });

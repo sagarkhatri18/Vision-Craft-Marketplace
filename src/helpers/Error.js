@@ -1,5 +1,17 @@
 import React from "react";
 
+export const errorResponse = (error) => {
+  if (error.response.status == "422") {
+    return error.response.data.data;
+  } else {
+    return error.response.data.message != undefined
+      ? messageParser(error.response.data.message)
+      : messageParser("Error occurred");
+  }
+};
+
+const messageParser = (message) => [{ msg: message }];
+
 export const Error = (props) => {
   return (
     <>
@@ -7,7 +19,7 @@ export const Error = (props) => {
         <div className="alert alert-danger fade show form-error" role="alert">
           <ul className="error-ul">
             {Object.keys(props.errors).map((err, index) => (
-              <li key={index}>{props.errors[err][0]}</li>
+              <li key={index}>{props.errors[err].msg}</li>
             ))}
           </ul>
         </div>

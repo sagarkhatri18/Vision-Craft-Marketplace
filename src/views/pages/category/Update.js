@@ -111,7 +111,6 @@ const Update = () => {
             <Error errors={error} />
             <Card className="card-stats">
               <Card.Header>Update Category</Card.Header>
-
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Row>

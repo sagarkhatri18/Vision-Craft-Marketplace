@@ -108,7 +108,7 @@ const User = () => {
     return (
       <>
         <div className="d-inline-flex">
-          <NavLink to={`#`}>
+          <NavLink to={`/user/update/${user._id}`}>
             <Button
               type="button"
               title="Edit"
@@ -143,7 +143,7 @@ const User = () => {
       <Container fluid>
         <Row>
           <div className="col-12 text-end mb-2">
-            <NavLink to="/category/create">
+            <NavLink to="/user/create">
               <button
                 type="button"
                 className="btn btn-sm btn-primary float-right"
