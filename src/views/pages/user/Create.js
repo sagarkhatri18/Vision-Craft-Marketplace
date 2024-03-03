@@ -82,7 +82,6 @@ const Create = () => {
           navigate("/users");
         })
         .catch((error) => {
-          debugger
           setError(errorResponse(error));
           dispatch(hideLoader());
         });

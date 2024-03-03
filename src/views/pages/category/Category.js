@@ -10,10 +10,14 @@ import alertify from "alertifyjs";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { showLoader, hideLoader } from "../../../actions/Action";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import UploadCategoryImage from "./UploadCategoryImage";
 
 const Category = () => {
   const dispatch = useDispatch();
   const [categories, setCategories] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
+  const [clickedCategory, setClickedCategory] = useState("");
 
   const loadCategories = useCallback(() => {
     dispatch(showLoader());
@@ -64,13 +68,28 @@ const Category = () => {
   } categories.`;
 
   const formatDate = (category) =>
-    new Date(category.created_at).toLocaleString();
+    new Date(category.createdAt).toLocaleString();
 
   const getCategoryStatus = (category) => {
-    const severity = category.is_active ? "success" : "danger";
-    const statusValue = category.is_active ? "ACTIVE" : "INACTIVE";
+    const severity = category.isActive ? "success" : "danger";
+    const statusValue = category.isActive ? "ACTIVE" : "INACTIVE";
     return <Tag value={statusValue} severity={severity} />;
   };
+
+  // open modal for loading user detail
+  const openModal = (id) => {
+    setClickedCategory(id);
+    setModalShow(true);
+  };
+
+  // close modal for uploaded files list
+  const closeModal = () => setModalShow(false);
+
+  const closeBtn = (
+    <button className="close" onClick={closeModal}>
+      &times;
+    </button>
+  );
 
   const actionBodyTemplate = (category) => {
     return (
@@ -88,6 +107,13 @@ const Category = () => {
             onClick={() => deleteCategory(category._id)}
             type="button"
             icon="pi pi-trash"
+            className="btn btn-sm btn-borderless"
+            rounded
+          ></Button>
+          <Button
+            onClick={() => openModal(category._id)}
+            type="button"
+            icon="pi pi-image"
             className="btn btn-sm btn-borderless"
             rounded
           ></Button>
@@ -133,6 +159,14 @@ const Category = () => {
             </DataTable>
           </div>
         </Row>
+        <Modal isOpen={modalShow} toggle={closeModal}>
+          <ModalHeader toggle={closeModal} close={closeBtn}>
+            Upload Image
+          </ModalHeader>
+          <ModalBody>
+            <UploadCategoryImage categoryId={clickedCategory} closeModal={closeModal}/>
+          </ModalBody>
+        </Modal>
       </Container>
     </>
   );
