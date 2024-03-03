@@ -9,7 +9,7 @@ const config = {
 
 // list all the categories
 export const getCatgories = async () => {
-  return await axios.get(process.env.REACT_APP_API_URL + `category`, config);
+  return await axios.get(process.env.REACT_APP_API_URL + `category`);
 };
 
 // add the new category
@@ -41,7 +41,7 @@ export const updateCategory = async (id, data) => {
   const updateData = {
     name: data.name,
     slug: data.slug,
-    is_active: data.is_active,
+    isActive: data.isActive,
   };
 
   return await axios.put(

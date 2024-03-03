@@ -8,6 +8,7 @@ const Dashboard = () => {
   return (
     <>
       <Container fluid>
+        <h5>Available Categories:</h5>
         <Row>
           {loggedInRole() == "admin" ? (
             <AdminDashboard />

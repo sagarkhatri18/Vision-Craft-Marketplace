@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button, Card, Container, Row, Col, Form } from "react-bootstrap";
 // Validator Packages
 import SimpleReactValidator from "simple-react-validator";
-import { Error } from "../../../helpers/Error";
+import { Error, errorResponse } from "../../../helpers/Error";
 import { toast } from "react-toastify";
 import { updateCategory, findCategory } from "../../../services/Category";
 import { useDispatch } from "react-redux";
@@ -18,7 +18,7 @@ const Update = () => {
   const [state, setState] = useState({
     name: "",
     slug: "",
-    is_active: "",
+    isActive: "",
   });
   const [error, setError] = useState("");
 
@@ -28,25 +28,9 @@ const Update = () => {
 
   // handle input fields onchange value
   const handleChange = (e) => {
-    if (e.target.name == "name") {
-      setState((prevState) => ({
-        ...prevState,
-        [e.target.name]: e.target.value,
-        slug: convertToSlug(e.target.value),
-      }));
-    } else {
-      setState((prevState) => ({
-        ...prevState,
-        [e.target.name]: e.target.value,
-      }));
-    }
-  };
-
-  // handle input fields onchange value
-  const handleChangeRadio = (e) => {
     setState((prevState) => ({
       ...prevState,
-      [e.target.name]: e.target.value == "1" ? true : false,
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -62,8 +46,8 @@ const Update = () => {
     dispatch(showLoader());
     const formData = {
       name: state.name,
-      slug: state.slug,
-      is_active: state.is_active,
+      slug: convertToSlug(state.name),
+      isActive: state.isActive == "1" ? true : false,
     };
 
     if (validator.allValid()) {
@@ -74,8 +58,7 @@ const Update = () => {
         })
         .catch((error) => {
           dispatch(hideLoader());
-          setError(error.response.data);
-          toast.error("Error occured while sending data");
+          setError(errorResponse(error));
         });
     } else {
       dispatch(hideLoader());
@@ -131,20 +114,6 @@ const Update = () => {
                         "required"
                       )}
                     </Col>
-                    <Col className="px-1" md="6">
-                      <Form.Group>
-                        <label>Slug</label>
-                        <Form.Control
-                          placeholder="Slug"
-                          value={state.slug}
-                          name="slug"
-                          disabled
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
                     <Col className="pr-1" md="6">
                       <Form.Group>
                         <label>Is Active?</label>
@@ -153,26 +122,25 @@ const Update = () => {
                           inline
                           type="radio"
                           label="Yes"
-                          name="is_active"
+                          name="isActive"
                           id="yes"
                           value="1"
-                          checked={state.is_active}
-                          onChange={handleChangeRadio}
+                          checked={state.isActive == true}
+                          onChange={handleChange}
                         />
                         <Form.Check
                           inline
                           type="radio"
                           label="No"
-                          checked={!state.is_active}
-                          onChange={handleChangeRadio}
-                          name="is_active"
+                          checked={state.isActive == false}
+                          onChange={handleChange}
+                          name="isActive"
                           id="no"
                           value="0"
                         />
                       </Form.Group>
                     </Col>
                   </Row>
-
                   <Button
                     className="btn-fill pull-right float-right mb-3 mt-3"
                     type="submit"

@@ -1,32 +1,31 @@
-import { Card, Row, Col } from "react-bootstrap";
+import { getCatgories } from "../../../services/Category";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { showLoader, hideLoader } from "../../../actions/Action";
+import CategoryDashboardData from "./CategoryDashboardData";
+import { toast } from "react-toastify";
 
 export const CustomerDashboard = () => {
-  return (
-    <>
-      <Col lg="3" sm="6">
-        <Card className="card-stats">
-          <Card.Body>
-            <Row>
-              <Col xs="10">
-                <div
-                  className="text-center float-left"
-                  style={{ fontSize: "25px" }}
-                >
-                  <i className="normal-text">Customer Category</i>
-                </div>
-              </Col>
-              <Col xs="2">
-                <div
-                  className="text-center float-right"
-                  style={{ fontSize: "25px" }}
-                >
-                  <i className="normal-text">45</i>
-                </div>
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
-      </Col>
-    </>
-  );
+  const dispatch = useDispatch();
+  const [categories, setCategories] = useState([]);
+
+  const loadCategories = useCallback(() => {
+    dispatch(showLoader());
+    getCatgories()
+      .then((data) => {
+        dispatch(hideLoader());
+        const apiResponse = data.data;
+        setCategories(apiResponse);
+      })
+      .catch((error) => {
+        dispatch(hideLoader());
+        toast.error("Error occured while fetching data");
+      });
+  }, []);
+
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
+
+  return (categories != null)?<CategoryDashboardData data={categories} />:"Failed to load data";
 };

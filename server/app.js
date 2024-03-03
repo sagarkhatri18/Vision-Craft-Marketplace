@@ -36,7 +36,7 @@ app.use(bodyParser.json());
 app.use(allowCrossDomain);
 app.use("/api/", accountRoute);
 app.use("/api/user/", authenticateToken, userRoute);
-app.use("/api/category/", authenticateToken, categoryRoute);
+app.use("/api/category/", categoryRoute);
 
 app.listen(10000, () => {
   console.log("Started application on port %d", 10000);
