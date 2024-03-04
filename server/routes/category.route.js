@@ -1,7 +1,6 @@
 var router = require("express").Router();
 var categoryController = require("../controllers/category.controller");
 const { authenticateToken } = require("../services/helper");
-
 const { validateCategory, validate } = require("../middlewares/validator");
 
 router.get("/", categoryController.index);

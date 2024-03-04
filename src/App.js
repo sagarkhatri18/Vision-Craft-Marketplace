@@ -6,7 +6,6 @@ import "./assets/scss/light-bootstrap-dashboard-react.scss?v=2.0.0";
 // import "./assets/css/demo.css";
 import "./assets/css/custom.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
 import alertify from "alertifyjs";
 import "alertifyjs/build/css/alertify.css";
 

@@ -1,12 +1,17 @@
 import React from "react";
 
 export const errorResponse = (error) => {
-  if (error.response.status == "422") {
-    return error.response.data.data;
-  } else {
-    return error.response.data.message != undefined
-      ? messageParser(error.response.data.message)
-      : messageParser("Error occurred");
+  console.log(error);
+  try {
+    if (error.response.status == "422") {
+      return error.response.data.data;
+    } else {
+      return error.response.data.message != undefined
+        ? messageParser(error.response.data.message)
+        : messageParser("Error occurred");
+    }
+  } catch (e) {
+    messageParser("Error occurred");
   }
 };
 

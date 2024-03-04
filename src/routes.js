@@ -6,6 +6,8 @@ const AddCategory = React.lazy(() => import("./views/pages/category/Create"));
 const UpdateCategory = React.lazy(() =>
   import("./views/pages/category/Update")
 );
+const Product = React.lazy(() => import("./views/pages/product/Product"));
+const AddProduct = React.lazy(() => import("./views/pages/product/Create"));
 const User = React.lazy(() => import("./views/pages/user/User"));
 const AddUser = React.lazy(() => import("./views/pages/user/Create"));
 const UpdateUser = React.lazy(() => import("./views/pages/user/Update"));
@@ -19,7 +21,7 @@ const routes = [
     path: "/dashboard",
     name: "Dashboard",
     sidebar: true,
-    icon: "nc-icon nc-chart-pie-35",
+    icon: "nc-icon nc-settings-gear-64",
     element: Dashboard,
     access: All,
   },
@@ -69,6 +71,22 @@ const routes = [
     sidebar: false,
     icon: "nc-icon nc-notes",
     element: UpdateUser,
+    access: Admin,
+  },
+  {
+    path: "/products",
+    name: "Products",
+    sidebar: true,
+    icon: "nc-icon nc-album-2",
+    element: Product,
+    access: Admin,
+  },
+  {
+    path: "/product/create",
+    name: "Add Product",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: AddProduct,
     access: Admin,
   },
   // {

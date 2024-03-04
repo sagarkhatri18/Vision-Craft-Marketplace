@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const userRoute = require("./routes/user.route");
 const accountRoute = require("./routes/account.route");
 const categoryRoute = require("./routes/category.route");
+const productRoute = require("./routes/product.route");
 const connectDB = require("./services/db.connection");
 const { authenticateToken } = require("./services/helper");
 
@@ -37,6 +38,7 @@ app.use(allowCrossDomain);
 app.use("/api/", accountRoute);
 app.use("/api/user/", authenticateToken, userRoute);
 app.use("/api/category/", categoryRoute);
+app.use("/api/product/", productRoute);
 
 app.listen(10000, () => {
   console.log("Started application on port %d", 10000);
