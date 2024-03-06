@@ -23,9 +23,27 @@ exports.add = async (req, res, next) => {
       });
     })
     .catch((error) => {
-      console.log(error)
+      console.log(error);
       return res
         .status(400)
         .send({ message: "Failed to add the product", success: false });
     });
+};
+
+// fetch all the products lists
+exports.index = async (req, res, next) => {
+  try {
+    const products = await Product.find({})
+      .populate("categoryId")
+      .populate("userId")
+      .sort({
+        createdAt: "descending",
+      });
+    return res.status(200).json(products);
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: "Failed to load the products",
+    });
+  }
 };

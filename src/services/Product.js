@@ -28,3 +28,8 @@ export const add = async (data) => {
     config
   );
 };
+
+// list all the available products
+export const getAllProducts = async () => {
+  return await axios.get(process.env.REACT_APP_API_URL + `product`);
+};

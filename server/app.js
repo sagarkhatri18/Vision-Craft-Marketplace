@@ -1,7 +1,7 @@
 const express = require("express");
 var app = express();
 const bodyParser = require("body-parser");
-
+const dotenv = require("dotenv");
 const userRoute = require("./routes/user.route");
 const accountRoute = require("./routes/account.route");
 const categoryRoute = require("./routes/category.route");
@@ -9,6 +9,7 @@ const productRoute = require("./routes/product.route");
 const connectDB = require("./services/db.connection");
 const { authenticateToken } = require("./services/helper");
 
+dotenv.config();
 //Connecting the Database
 connectDB();
 
@@ -29,7 +30,7 @@ let allowCrossDomain = (req, res, next) => {
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static('public'))
+app.use(express.static("public"));
 
 // parse application/json
 app.use(bodyParser.json());
@@ -40,6 +41,6 @@ app.use("/api/user/", authenticateToken, userRoute);
 app.use("/api/category/", categoryRoute);
 app.use("/api/product/", productRoute);
 
-app.listen(10000, () => {
-  console.log("Started application on port %d", 10000);
+app.listen(process.env.APP_PORT, () => {
+  console.log("Started application on port %d", process.env.APP_PORT);
 });
