@@ -15,6 +15,7 @@ exports.add = async (req, res, next) => {
     discountAmount: reqParam.discountAmount,
     priceAfterDiscount: reqParam.priceAfterDiscount,
     addedBy: reqParam.addedBy,
+    description: reqParam.description,
   })
     .then((data) => {
       return res.status(200).send({
@@ -44,6 +45,77 @@ exports.index = async (req, res, next) => {
     return res.status(500).send({
       success: false,
       message: "Failed to load the products",
+    });
+  }
+};
+
+// load all the products added by the particular user
+exports.userProducts = async (req, res, next) => {
+  const userId = req.params.userId;
+
+  try {
+    const products = await Product.find({ userId: userId })
+      .populate("categoryId")
+      .populate("userId")
+      .sort({
+        createdAt: "descending",
+      });
+    return res.status(200).json({
+      success: true,
+      message: "Data fetched successfully",
+      data: products,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: "Failed to load the products",
+    });
+  }
+};
+
+// find product from id
+exports.find = async (req, res) => {
+  const _id = req.params.id;
+
+  try {
+    const product = await Product.findOne({ _id })
+      .populate("categoryId")
+      .populate("userId");
+    if (!product) {
+      return res.status(400).json({
+        success: false,
+        message: "Sorry no any product found",
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: "Data found",
+        data: product,
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: "Something went Wrong",
+    });
+  }
+};
+
+// delete product from id
+exports.delete = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    await Product.deleteOne({ _id: id });
+
+    return res.status(200).json({
+      success: true,
+      message: "Product has been successfully deleted",
+    });
+  } catch {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete the selected product",
     });
   }
 };

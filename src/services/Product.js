@@ -20,7 +20,8 @@ export const add = async (data) => {
     availableQuantity: data.availableQuantity,
     discountAmount: data.discountAmount,
     priceAfterDiscount: data.priceAfterDiscount,
-    addedBy: data.addedBy
+    addedBy: data.addedBy,
+    description: data.description
   };
   return axios.post(
     process.env.REACT_APP_API_URL + `product`,
@@ -31,5 +32,29 @@ export const add = async (data) => {
 
 // list all the available products
 export const getAllProducts = async () => {
-  return await axios.get(process.env.REACT_APP_API_URL + `product`);
+  return await axios.get(process.env.REACT_APP_API_URL + `product`, config);
+};
+
+// get specific product from id
+export const findProduct = async (id) => {
+  return await axios.get(
+    process.env.REACT_APP_API_URL + `product/${id}`,
+    config
+  );
+};
+
+// list all the products from certain users
+export const getAllProductsFromUser = async (userId) => {
+  return await axios.get(
+    process.env.REACT_APP_API_URL + `product/fetch-from-userid/${userId}`,
+    config
+  );
+};
+
+// delete the particular product
+export const deleteProductFromId = async (id) => {
+  return await axios.delete(
+    process.env.REACT_APP_API_URL + `product/${id}`,
+    config
+  );
 };

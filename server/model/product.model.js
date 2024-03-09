@@ -33,7 +33,6 @@ const productSchema = new mongoose.Schema(
     },
     addedBy: {
       type: String,
-      enum: ["self", "admin"],
       required: true,
     },
     categoryId: {

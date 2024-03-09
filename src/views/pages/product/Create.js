@@ -11,11 +11,16 @@ import Select from "react-select";
 import { add } from "../../../services/Product";
 import { loggedInRole } from "../../../helpers/IsLoggedIn";
 import { useNavigate } from "react-router";
+import { Editor } from "primereact/editor";
+import { getCurrentUserDetails } from "../../../helpers/IsLoggedIn";
 
 const Create = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentRole = loggedInRole().toLowerCase();
+  const loggedInDetail = getCurrentUserDetails();
+  const currentUserId =
+    currentRole != "admin" && loggedInDetail != null ? loggedInDetail.id : "";
 
   // Validator Imports
   const validator = useRef(new SimpleReactValidator()).current;
@@ -32,6 +37,7 @@ const Create = () => {
     discountAmount: "0",
     priceAfterDiscount: "",
     addedBy: currentRole,
+    description: "",
   });
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -44,6 +50,14 @@ const Create = () => {
     setState((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
+    }));
+  };
+
+  // handle change product description
+  const handleProductDescriptionChange = (e) => {
+    setState((prevState) => ({
+      ...prevState,
+      description: e.htmlValue,
     }));
   };
 
@@ -100,13 +114,14 @@ const Create = () => {
       slug: convertToSlug(state.title),
       isActive: state.isActive == "1" ? true : false,
       categoryId: selectedCategory == null ? "" : selectedCategory.value,
-      userId: selectedUser == null ? "" : selectedUser.value,
+      userId: selectedUser == null ? currentUserId : selectedUser.value,
       discountPercentage: state.discountPercentage,
       price: state.price,
       availableQuantity: state.availableQuantity,
       discountAmount: state.discountAmount,
       priceAfterDiscount: state.priceAfterDiscount,
       addedBy: currentRole,
+      description: state.description,
     };
 
     if (validator.allValid()) {
@@ -114,7 +129,7 @@ const Create = () => {
         .then((data) => {
           dispatch(hideLoader());
           toast.success(data.data.message);
-          navigate("/products");
+          navigate("/product");
         })
         .catch((error) => {
           dispatch(hideLoader());
@@ -307,17 +322,22 @@ const Create = () => {
                         ></Form.Control>
                       </Form.Group>
                     </Col>
-                    <Col className="pr-1" md="4">
-                      <Form.Group>
-                        <label>User</label>
-                        <Select
-                          options={userOptions}
-                          value={selectedUser}
-                          onChange={handleUserSelectOption}
-                        />
-                      </Form.Group>
-                      {validator.message("user", selectedUser, "required")}
-                    </Col>
+                    {currentRole == "admin" ? (
+                      <Col className="pr-1" md="4">
+                        <Form.Group>
+                          <label>User</label>
+                          <Select
+                            options={userOptions}
+                            value={selectedUser}
+                            onChange={handleUserSelectOption}
+                          />
+                        </Form.Group>
+                        {validator.message("user", selectedUser, "required")}
+                      </Col>
+                    ) : (
+                      ""
+                    )}
+
                     <Col className="pr-1" md="4">
                       <Form.Group>
                         <label>Is Active?</label>
@@ -343,6 +363,20 @@ const Create = () => {
                           id="no"
                         />
                       </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="pr-1" md="12">
+                      <Editor
+                        value={state.description}
+                        onTextChange={handleProductDescriptionChange}
+                        style={{ height: "250px" }}
+                      />
+                      {validator.message(
+                        "product description",
+                        state.description,
+                        "required"
+                      )}
                     </Col>
                   </Row>
                   <Button

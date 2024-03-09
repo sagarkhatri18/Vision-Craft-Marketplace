@@ -52,3 +52,14 @@ export const isAdminLogin = () => {
     return false;
   }
 };
+
+// get logged in user details
+export const getCurrentUserDetails = () => {
+  const loginStatus = isLoggedIn();
+
+  if (loginStatus) {
+    return decodeToken(localStorage.getItem("token"));
+  } else {
+    return null;
+  }
+};
