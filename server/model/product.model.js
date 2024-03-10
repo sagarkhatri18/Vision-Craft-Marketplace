@@ -38,6 +38,14 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    image: {
+      type: String,
+      default: null,
+    },
+    filePath: {
+      type: String,
+      default: null,
+    },
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",

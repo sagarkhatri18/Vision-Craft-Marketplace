@@ -10,6 +10,7 @@ import { showLoader, hideLoader } from "../../../actions/Action";
 import { toast } from "react-toastify";
 import alertify from "alertifyjs";
 import { getAllProducts, deleteProductFromId } from "../../../services/Product";
+import placeHolderImage from "../../../assets/img/placeholderImage.png";
 
 const Product = () => {
   const dispatch = useDispatch();
@@ -120,6 +121,22 @@ const Product = () => {
     );
   };
 
+  const productImage = (product) => {
+    const source = `${process.env.REACT_APP_API_BASE_URL}/${product.filePath}/thumbnails/${product.image}`;
+    const imageSrc = source ? source : placeHolderImage;
+
+    return (
+      <img
+        src={imageSrc}
+        alt={product.title}
+        style={{ width: "50px", height: "50px" }}
+        onError={(e) => {
+          e.target.src = placeHolderImage;
+        }}
+      />
+    );
+  };
+
   return (
     <Container fluid>
       <Row>
@@ -144,6 +161,7 @@ const Product = () => {
             rowsPerPageOptions={[10, 25, 50]}
             tableStyle={{ minWidth: "50rem" }}
           >
+            <Column body={productImage} header="Image"></Column>
             <Column field="title" sortable header="Title"></Column>
             <Column body={getCategoryName} sortable header="Category"></Column>
             <Column body={getUserName} sortable header="User Name"></Column>

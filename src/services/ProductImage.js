@@ -24,3 +24,24 @@ export const productImages = async (productId) => {
     config
   );
 };
+
+// delete the particular image
+export const deleteImageFromId = async (id) => {
+  return await axios.delete(
+    process.env.REACT_APP_API_URL + `product/image/${id}`,
+    config
+  );
+};
+
+// update the product image main data
+export const updateMainImage = async (id, data) => {
+  const formData = {
+    productId: data.productId,
+  };
+
+  return await axios.put(
+    process.env.REACT_APP_API_URL + `product/image/main/${id}`,
+    formData,
+    config
+  );
+};

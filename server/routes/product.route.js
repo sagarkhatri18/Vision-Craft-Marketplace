@@ -12,5 +12,7 @@ router.put("/:id", productController.update);
 
 router.get("/fetch/images/:productId", productImageController.loadProductImages);
 router.post("/upload", productImageController.uploadImage);
+router.delete("/image/:id", productImageController.deleteImage);
+router.put("/image/main/:id", productImageController.updateMainImage);
 
 module.exports = router;

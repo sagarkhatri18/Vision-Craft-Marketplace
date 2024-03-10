@@ -22,6 +22,10 @@ const productImageSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isMain: {
+      type: Boolean,
+      default: false,
+    },
     productId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",

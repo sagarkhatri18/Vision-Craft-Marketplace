@@ -1,18 +1,24 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Button, Card, Container, Row, Col, Form } from "react-bootstrap";
+import { Card, Container, Row, Col, Form } from "react-bootstrap";
 import { DropZoneContainer } from "../../../helpers/DropZoneContainer";
 import { useDropzone } from "react-dropzone";
+import alertify from "alertifyjs";
 import { showLoader, hideLoader } from "../../../actions/Action";
 import { Error, errorResponse } from "../../../helpers/Error";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { loggedInRole } from "../../../helpers/IsLoggedIn";
 import { useParams } from "react-router";
-import { uploadImage, productImages } from "../../../services/ProductImage";
+import { Button } from "primereact/button";
+import {
+  uploadImage,
+  productImages,
+  deleteImageFromId,
+  updateMainImage,
+} from "../../../services/ProductImage";
 import { NavLink } from "react-router-dom";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Tag } from "primereact/tag";
 
 const ProductImage = () => {
   const dispatch = useDispatch();
@@ -83,6 +89,64 @@ const ProductImage = () => {
     );
   };
 
+  // delete the selected category
+  const deleteProductImage = (id) => {
+    alertify.confirm(
+      "Delete",
+      "Are you sure want to delete the selected image?",
+      function () {
+        deleteImageFromId(id)
+          .then((data) => {
+            toast.success(data.data.message);
+            loadProductImages();
+          })
+          .catch((error) => {
+            toast.error("Failed to delete the selected image");
+          });
+      },
+      function () {}
+    );
+  };
+
+  // update main image
+  const changeMainImage = useCallback((id) => {
+    dispatch(showLoader());
+
+    updateMainImage(id, { productId: params.id })
+      .then((data) => {
+        toast.success(data.data.message);
+        loadProductImages();
+        dispatch(hideLoader());
+      })
+      .catch((error) => {
+        dispatch(hideLoader());
+        toast.error("Failed to update the selected image");
+      });
+  }, []);
+
+  const actionBodyTemplate = (image) => {
+    return (
+      <>
+        <div className="d-inline-flex">
+          <Button
+            onClick={() => deleteProductImage(image._id)}
+            type="button"
+            icon="pi pi-trash"
+            className="btn btn-sm btn-borderless"
+            rounded
+          ></Button>
+          <Button
+            onClick={() => changeMainImage(image._id)}
+            type="button"
+            icon={image.isMain ? "pi pi-heart-fill" : "pi pi-heart"}
+            className="btn btn-sm btn-borderless"
+            rounded
+          ></Button>
+        </div>
+      </>
+    );
+  };
+
   return (
     <Container fluid>
       <Error errors={error} />
@@ -143,6 +207,11 @@ const ProductImage = () => {
             <Column field="mimeType" sortable header="Mime Type"></Column>
             <Column field="fileSize" sortable header="File Size"></Column>
             <Column field="addedBy" sortable header="Added By"></Column>
+            <Column
+              headerStyle={{ width: "5rem", textAlign: "center" }}
+              bodyStyle={{ textAlign: "center", overflow: "visible" }}
+              body={actionBodyTemplate}
+            />
           </DataTable>
         </Col>
       </Row>
