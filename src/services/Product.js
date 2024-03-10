@@ -66,6 +66,13 @@ export const getAllActiveProducts = async () => {
   );
 };
 
+// list all the products from category id
+export const getAllProductsFromCategoryId = async (categoryId) => {
+  return await axios.get(
+    process.env.REACT_APP_API_URL + `product/fetch/category/${categoryId}`
+  );
+};
+
 // get specific product from id
 export const findProduct = async (id) => {
   return await axios.get(
@@ -89,4 +96,3 @@ export const deleteProductFromId = async (id) => {
     config
   );
 };
-

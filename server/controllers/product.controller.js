@@ -112,6 +112,26 @@ exports.findActiveProducts = async (req, res, next) => {
   }
 };
 
+// fetch all the products from category id
+exports.findProductsFromCategoryId = async (req, res, next) => {
+  const categoryId = req.params.categoryId;
+  try {
+    const products = await Product.find({ categoryId: categoryId }).sort({
+      createdAt: "descending",
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Data fetched successfully",
+      data: products,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: "Failed to load the products",
+    });
+  }
+};
+
 // load all the products added by the particular user
 exports.userProducts = async (req, res, next) => {
   const userId = req.params.userId;
@@ -182,4 +202,3 @@ exports.delete = async (req, res) => {
     });
   }
 };
-

@@ -4,13 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { showLoader, hideLoader } from "../../../actions/Action";
 import { toast } from "react-toastify";
-import { Card, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+import placeHolderImage from "../../../assets/img/placeholderImage.png";
 
 const LatestProduct = () => {
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
-  const placeholderImageSrc = `https://placehold.jp/30/dd6699/ffffff/300x288.png`;
 
   const loadProducts = useCallback(() => {
     dispatch(showLoader());
@@ -20,7 +20,6 @@ const LatestProduct = () => {
         setProducts(data.data);
       })
       .catch((error) => {
-        debugger;
         dispatch(hideLoader());
         toast.error("Error occured while fetching data");
       });
@@ -60,9 +59,12 @@ const LatestProduct = () => {
                       <NavLink to={`/product/${item._id}`}>
                         <img
                           className="img-fluid"
-                          src={placeholderImageSrc}
-                          title={item.title}
+                          src={`${process.env.REACT_APP_API_BASE_URL}/${item.filePath}/${item.image}`}
                           alt={item.title}
+                          title={item.title}
+                          onError={(e) => {
+                            e.target.src = placeHolderImage;
+                          }}
                         />
                       </NavLink>
                     </div>
@@ -95,7 +97,7 @@ const LatestProduct = () => {
                         <i className="fa fa-heart" />{" "}
                       </a> */}
 
-                      <NavLink to={`/product/${item._id}`} className='btn'>
+                      <NavLink to={`/product/${item._id}`} className="btn">
                         <i className="fa fa-eye" />
                       </NavLink>
                       <a href="#" className="btn">

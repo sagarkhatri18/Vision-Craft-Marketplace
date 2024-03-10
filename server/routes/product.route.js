@@ -7,6 +7,7 @@ router.get("/", productController.index);
 router.delete("/:id", productController.delete);
 router.get("/:id", productController.find);
 router.get("/fetch/active", productController.findActiveProducts);
+router.get("/fetch/category/:categoryId", productController.findProductsFromCategoryId);
 router.get("/fetch-from-userid/:userId", productController.userProducts);
 router.put("/:id", productController.update);
 
