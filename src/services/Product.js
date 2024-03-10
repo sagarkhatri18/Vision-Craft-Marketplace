@@ -61,7 +61,9 @@ export const getAllProducts = async () => {
 
 // list all the active products
 export const getAllActiveProducts = async () => {
-  return await axios.get(process.env.REACT_APP_API_URL + `product/fetch/active`);
+  return await axios.get(
+    process.env.REACT_APP_API_URL + `product/fetch/active`
+  );
 };
 
 // get specific product from id
@@ -87,3 +89,4 @@ export const deleteProductFromId = async (id) => {
     config
   );
 };
+

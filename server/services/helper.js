@@ -35,8 +35,8 @@ const slugify = (str) =>
 
 const categoryImageUploadPath = "images/category_uploaded_files";
 const categoryImageUploadPathThumbnail = `${categoryImageUploadPath}/thumbnails`;
-const productImageUploadPath = "images/product_uploaded_files/";
-const productImageUploadPathThumbnail = `${productImageUploadPath}/thumbnails/`;
+const productImageUploadPath = "images/product_uploaded_files";
+const productImageUploadPathThumbnail = `${productImageUploadPath}/thumbnails`;
 
 module.exports = {
   tokenSign,
@@ -44,4 +44,6 @@ module.exports = {
   slugify,
   categoryImageUploadPath,
   categoryImageUploadPathThumbnail,
+  productImageUploadPath,
+  productImageUploadPathThumbnail,
 };

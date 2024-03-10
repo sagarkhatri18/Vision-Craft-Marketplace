@@ -1,7 +1,6 @@
 import React from "react";
 
 export const errorResponse = (error) => {
-  console.log(error);
   try {
     if (error.response.status == "422") {
       return error.response.data.data;

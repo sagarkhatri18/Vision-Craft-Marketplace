@@ -1,9 +1,4 @@
 import React from "react";
-// const TableList = React.lazy(() => import("views/TableList"));
-// const Typography = React.lazy(() => import("views/Typography"));
-// const Icons = React.lazy(() => import("views/Icons"));
-// const Maps = React.lazy(() => import("views/Maps"));
-// const Notifications = React.lazy(() => import("views/Notifications"));
 
 const Dashboard = React.lazy(() => import("./views/pages/dashboard/Dashboard"));
 const Category = React.lazy(() => import("./views/pages/category/Category"));
@@ -15,6 +10,9 @@ const Product = React.lazy(() => import("./views/pages/product/Product"));
 const MyProduct = React.lazy(() => import("./views/pages/product/MyProduct"));
 const ProductDetail = React.lazy(() =>
   import("./views/pages/product/ProductDetail")
+);
+const ProductImageUpload = React.lazy(() =>
+  import("./views/pages/product/ProductImage")
 );
 const AddProduct = React.lazy(() => import("./views/pages/product/Create"));
 const UpdateProduct = React.lazy(() => import("./views/pages/product/Update"));
@@ -123,6 +121,14 @@ const routes = [
     icon: "nc-icon nc-notes",
     element: ProductDetail,
     access: All,
+  },
+  {
+    path: "/product/image/:id",
+    name: "Product Image",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: ProductImageUpload,
+    access: AdminCustomer,
   },
 ];
 

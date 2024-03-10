@@ -24,7 +24,6 @@ exports.add = async (req, res, next) => {
       });
     })
     .catch((error) => {
-      console.log(error);
       return res
         .status(400)
         .send({ message: "Failed to add the product", success: false });
@@ -183,3 +182,4 @@ exports.delete = async (req, res) => {
     });
   }
 };
+

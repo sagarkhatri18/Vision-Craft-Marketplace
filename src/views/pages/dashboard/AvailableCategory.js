@@ -37,7 +37,7 @@ const AvailableCategory = () => {
       </div>
       <Row>
         {categories.map((item, index) => {
-          const image = `${process.env.REACT_APP_API_BASE_URL}${item.filePath}${item.image}`;
+          const image = `${process.env.REACT_APP_API_BASE_URL}/${item.filePath}/${item.image}`;
           return (
             <Col lg="2" sm="6" key={index} className="pr-0">
               <Card className="card-stats">
