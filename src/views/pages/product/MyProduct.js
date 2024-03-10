@@ -84,7 +84,7 @@ const MyProduct = () => {
     return (
       <>
         <div className="d-inline-flex">
-          <NavLink to={`/`}>
+          <NavLink to={`/product/update/${product._id}`}>
             <Button
               type="button"
               title="Edit"

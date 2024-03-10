@@ -1,24 +1,26 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, Card, Container, Row, Col, Form } from "react-bootstrap";
+// Validator Packages
+import SimpleReactValidator from "simple-react-validator";
+import { Error, errorResponse } from "../../../helpers/Error";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import Select from "react-select";
+import { Editor } from "primereact/editor";
+
 import { showLoader, hideLoader } from "../../../actions/Action";
 import { getCatgories } from "../../../services/Category";
-import { getUsers } from "../../../services/User";
-import { useDispatch } from "react-redux";
-import { Error, errorResponse } from "../../../helpers/Error";
-import SimpleReactValidator from "simple-react-validator";
-import { toast } from "react-toastify";
-import Select from "react-select";
-import { add } from "../../../services/Product";
-import { useNavigate } from "react-router";
-import { Editor } from "primereact/editor";
 import {
   getCurrentUserDetails,
   loggedInRole,
 } from "../../../helpers/IsLoggedIn";
+import { update, findProduct } from "../../../services/Product";
 
-const Create = () => {
-  const dispatch = useDispatch();
+const Update = () => {
   const navigate = useNavigate();
+  const params = useParams();
+  const dispatch = useDispatch();
   const currentRole = loggedInRole().toLowerCase();
   const loggedInDetail = getCurrentUserDetails();
   const currentUserId =
@@ -29,22 +31,12 @@ const Create = () => {
   const [, forceUpdate] = useState();
 
   // set state
-  const [state, setState] = useState({
-    title: "",
-    slug: "",
-    isActive: "1",
-    price: "",
-    availableQuantity: "",
-    discountPercentage: "0",
-    discountAmount: "0",
-    priceAfterDiscount: "",
-    addedBy: currentRole,
-    description: "",
-  });
+  const [state, setState] = useState([]);
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [product, setProduct] = useState([]);
   const [users, setUsers] = useState([]);
 
   // handle input fields onchange value
@@ -107,6 +99,51 @@ const Create = () => {
     }
   };
 
+  // load all the available categories
+  const loadCategories = useCallback(() => {
+    dispatch(showLoader());
+    getCatgories()
+      .then((data) => {
+        dispatch(hideLoader());
+        const apiResponse = data.data;
+        setCategories(apiResponse);
+      })
+      .catch((error) => {
+        dispatch(hideLoader());
+        toast.error("Error occured while fetching data");
+      });
+  }, []);
+
+  // load the product detail
+  const loadProduct = useCallback(() => {
+    dispatch(showLoader());
+    findProduct(params.id)
+      .then((data) => {
+        dispatch(hideLoader());
+        const apiResponse = data.data.data;
+        setState(apiResponse);
+        setSelectedCategory({
+          value: apiResponse.categoryId._id,
+          label: apiResponse.categoryId.name,
+        });
+      })
+      .catch((error) => {
+        dispatch(hideLoader());
+        toast.error("Error occured while fetching data");
+      });
+  }, [params.id]);
+
+  // categories select options
+  const categoryOptions = categories.map((category) => ({
+    value: category._id,
+    label: category.name,
+  }));
+
+  useEffect(() => {
+    loadCategories();
+    loadProduct();
+  }, [loadCategories, loadProduct]);
+
   // handle form submit
   const handleSubmit = (event) => {
     dispatch(showLoader());
@@ -127,11 +164,11 @@ const Create = () => {
     };
 
     if (validator.allValid()) {
-      add(formData)
+      update(params.id, formData)
         .then((data) => {
           dispatch(hideLoader());
           toast.success(data.data.message);
-          navigate("/product");
+          navigate("/product/my");
         })
         .catch((error) => {
           dispatch(hideLoader());
@@ -150,67 +187,14 @@ const Create = () => {
       .replace(/[^\w-]+/g, "");
   };
 
-  // load all the available categories
-  const loadCategories = useCallback(() => {
-    dispatch(showLoader());
-    getCatgories()
-      .then((data) => {
-        dispatch(hideLoader());
-        const apiResponse = data.data;
-        setCategories(apiResponse);
-      })
-      .catch((error) => {
-        dispatch(hideLoader());
-        toast.error("Error occured while fetching data");
-      });
-  }, []);
-
-  // load all the users
-  const loadUsers = useCallback(() => {
-    dispatch(showLoader());
-    getUsers()
-      .then((data) => {
-        dispatch(hideLoader());
-        const resultArray = [];
-        const apiResponse = data.data;
-        apiResponse.forEach((item) => {
-          if (item.role != "admin") {
-            resultArray.push(item);
-          }
-        });
-        setUsers(resultArray);
-      })
-      .catch((error) => {
-        dispatch(hideLoader());
-        toast.error("Error occured while fetching data");
-      });
-  }, []);
-
-  useEffect(() => {
-    loadCategories();
-    loadUsers();
-  }, [loadCategories, loadUsers]);
-
-  // categories select options
-  const categoryOptions = categories.map((category) => ({
-    value: category._id,
-    label: category.name,
-  }));
-
-  // users select options
-  const userOptions = users.map((user) => ({
-    value: user._id,
-    label: user.firstName,
-  }));
-
-  return (
+  return state && state != null ? (
     <>
       <Container fluid>
         <Row>
           <Col md="12">
             <Error errors={error} />
             <Card className="card-stats">
-              <Card.Header>Add New Product</Card.Header>
+              <Card.Header>Update Product</Card.Header>
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Row>
@@ -222,6 +206,7 @@ const Create = () => {
                           name="title"
                           onChange={handleChange}
                           type="text"
+                          value={state.title}
                         ></Form.Control>
                       </Form.Group>
                       {validator.message(
@@ -252,6 +237,7 @@ const Create = () => {
                           placeholder="Avaialble Quantity"
                           name="availableQuantity"
                           onChange={handleChange}
+                          value={state.availableQuantity}
                           type="number"
                           step={1}
                           min="1"
@@ -352,14 +338,14 @@ const Create = () => {
                           id="yes"
                           value="1"
                           onChange={handleChange}
-                          checked={state.isActive === "1"}
+                          checked={state.isActive == true}
                         />
                         <Form.Check
                           inline
                           type="radio"
                           label="No"
                           onChange={handleChange}
-                          checked={state.isActive === "0"}
+                          checked={state.isActive == false}
                           name="isActive"
                           value="0"
                           id="no"
@@ -396,7 +382,9 @@ const Create = () => {
         </Row>
       </Container>
     </>
+  ) : (
+    ""
   );
 };
 
-export default Create;
+export default Update;

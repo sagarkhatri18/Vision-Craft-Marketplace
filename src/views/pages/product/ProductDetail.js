@@ -101,9 +101,7 @@ const ProductDetail = () => {
                       <span className="review-no">41 reviews</span>
                     </div>
                     <p className="product-description">
-                      Suspendisse quos? Tempus cras iure temporibus? Eu
-                      laudantium cubilia sem sem! Repudiandae et! Massa senectus
-                      enim minim sociosqu delectus posuere.
+                      <span dangerouslySetInnerHTML={{__html: product.description}}></span>
                     </p>
                     <h4 className="price">
                       current price:

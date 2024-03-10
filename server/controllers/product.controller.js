@@ -31,6 +31,50 @@ exports.add = async (req, res, next) => {
     });
 };
 
+// update product
+exports.update = async (req, res) => {
+  const _id = req.params.id;
+  const reqParam = req.body;
+
+  const updateData = {
+    title: reqParam.title,
+    slug: reqParam.slug,
+    isActive: reqParam.isActive,
+    categoryId: reqParam.categoryId,
+    userId: reqParam.userId,
+    discountPercentage: reqParam.discountPercentage,
+    price: reqParam.price,
+    availableQuantity: reqParam.availableQuantity,
+    discountAmount: reqParam.discountAmount,
+    priceAfterDiscount: reqParam.priceAfterDiscount,
+    addedBy: reqParam.addedBy,
+    description: reqParam.description,
+  };
+
+  try {
+    await Product.findOneAndUpdate({ _id: _id }, updateData)
+      .exec()
+      .then((product) => {
+        return res.status(200).json({
+          success: true,
+          message: "Product has been successfully updated",
+          data: product,
+        });
+      })
+      .catch((err) => {
+        return res.status(500).send({
+          success: false,
+          message: "Failed to update the selected product",
+        });
+      });
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: "Something went Wrong",
+    });
+  }
+};
+
 // fetch all the products lists
 exports.index = async (req, res, next) => {
   try {

@@ -21,10 +21,34 @@ export const add = async (data) => {
     discountAmount: data.discountAmount,
     priceAfterDiscount: data.priceAfterDiscount,
     addedBy: data.addedBy,
-    description: data.description
+    description: data.description,
   };
   return axios.post(
     process.env.REACT_APP_API_URL + `product`,
+    formData,
+    config
+  );
+};
+
+// update the product
+export const update = async (id, data) => {
+  const formData = {
+    title: data.title,
+    slug: data.slug,
+    isActive: data.isActive,
+    categoryId: data.categoryId,
+    userId: data.userId,
+    discountPercentage: data.discountPercentage,
+    price: data.price,
+    availableQuantity: data.availableQuantity,
+    discountAmount: data.discountAmount,
+    priceAfterDiscount: data.priceAfterDiscount,
+    addedBy: data.addedBy,
+    description: data.description,
+  };
+
+  return await axios.put(
+    process.env.REACT_APP_API_URL + `product/${id}`,
     formData,
     config
   );

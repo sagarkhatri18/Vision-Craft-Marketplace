@@ -17,6 +17,7 @@ const ProductDetail = React.lazy(() =>
   import("./views/pages/product/ProductDetail")
 );
 const AddProduct = React.lazy(() => import("./views/pages/product/Create"));
+const UpdateProduct = React.lazy(() => import("./views/pages/product/Update"));
 const User = React.lazy(() => import("./views/pages/user/User"));
 const AddUser = React.lazy(() => import("./views/pages/user/Create"));
 const UpdateUser = React.lazy(() => import("./views/pages/user/Update"));
@@ -24,7 +25,7 @@ const UpdateUser = React.lazy(() => import("./views/pages/user/Update"));
 const All = ["customer", "admin", "all"];
 const Admin = ["admin"];
 const Customer = ["customer"];
-const AdminCustomer = ["admin", "customer"]
+const AdminCustomer = ["admin", "customer"];
 
 const routes = [
   {
@@ -97,6 +98,14 @@ const routes = [
     sidebar: false,
     icon: "nc-icon nc-notes",
     element: AddProduct,
+    access: AdminCustomer,
+  },
+  {
+    path: "/product/update/:id",
+    name: "Update Product",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: UpdateProduct,
     access: AdminCustomer,
   },
   {
