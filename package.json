@@ -1,5 +1,5 @@
 {
-  "name": "light-bootstrap-dashboard-react",
+  "name": "vision-craft-marketplace",
   "version": "2.0.1",
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.15.2",
@@ -31,6 +31,9 @@
     "sass": "1.53.0",
     "simple-react-validator": "^1.6.2",
     "styled-components": "^6.1.8"
+  },
+  "overrides": {
+    "autoprefixer": "10.4.5"
   },
   "optionalDependencies": {
     "jquery": "3.5.1",

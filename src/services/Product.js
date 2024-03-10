@@ -59,6 +59,11 @@ export const getAllProducts = async () => {
   return await axios.get(process.env.REACT_APP_API_URL + `product`, config);
 };
 
+// list all the active products
+export const getAllActiveProducts = async () => {
+  return await axios.get(process.env.REACT_APP_API_URL + `product/fetch/active`);
+};
+
 // get specific product from id
 export const findProduct = async (id) => {
   return await axios.get(

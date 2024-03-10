@@ -54,7 +54,7 @@ const UploadCategoryImage = ({ categoryId, closeModal }) => {
         setCategory(returnData);
         if (returnData.image !== null)
           setImage(
-            `${process.env.REACT_APP_API_BASE_URL}${returnData.filePath}${returnData.image}`
+            `${process.env.REACT_APP_API_BASE_URL}/${returnData.filePath}/${returnData.image}`
           );
       })
       .catch((error) => {

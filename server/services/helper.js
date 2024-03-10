@@ -33,8 +33,15 @@ const slugify = (str) =>
     .replace(/[\s_-]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
+const categoryImageUploadPath = "images/category_uploaded_files";
+const categoryImageUploadPathThumbnail = `${categoryImageUploadPath}/thumbnails`;
+const productImageUploadPath = "images/product_uploaded_files/";
+const productImageUploadPathThumbnail = `${productImageUploadPath}/thumbnails/`;
+
 module.exports = {
   tokenSign,
   authenticateToken,
   slugify,
+  categoryImageUploadPath,
+  categoryImageUploadPathThumbnail,
 };

@@ -93,6 +93,26 @@ exports.index = async (req, res, next) => {
   }
 };
 
+// fetch all the active products
+exports.findActiveProducts = async (req, res, next) => {
+  try {
+    const products = await Product.find({
+      isActive: true,
+    })
+      .populate("categoryId")
+      .populate("userId")
+      .sort({
+        createdAt: "descending",
+      });
+    return res.status(200).json(products);
+  } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: "Failed to load the products",
+    });
+  }
+};
+
 // load all the products added by the particular user
 exports.userProducts = async (req, res, next) => {
   const userId = req.params.userId;

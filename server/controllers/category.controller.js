@@ -2,13 +2,24 @@ const { Category } = require("../model/category.model");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+const sharp = require("sharp");
+const {
+  categoryImageUploadPath,
+  categoryImageUploadPathThumbnail,
+} = require("../services/helper");
 
-const filePath = "images/category_uploaded_files/"
-const fileUploadPath = `public/${filePath}`;
+const fileUploadPath = `public/${categoryImageUploadPath}`;
+const thumbnailUploadPath = `public/${categoryImageUploadPathThumbnail}`;
 
-// Create the log directory if it does not exist
+// Create the directory if it does not exist
 if (!fs.existsSync(fileUploadPath)) {
   fs.mkdirSync(fileUploadPath, {
+    recursive: true,
+  });
+}
+
+if (!fs.existsSync(thumbnailUploadPath)) {
+  fs.mkdirSync(thumbnailUploadPath, {
     recursive: true,
   });
 }
@@ -105,8 +116,22 @@ exports.uploadImage = async (req, res, next) => {
       } else {
         const updateData = {
           image: req.file.filename,
-          filePath: filePath,
+          filePath: categoryImageUploadPath,
         };
+
+        sharp(`${fileUploadPath}/${req.file.filename}`)
+          .resize(100, 100)
+          .toFile(
+            `${thumbnailUploadPath}/${req.file.filename}`,
+            (err, resizeImage) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(resizeImage);
+              }
+            }
+          );
+
         // update the category file
         Category.findOneAndUpdate({ _id: req.body.categoryId }, updateData)
           .exec()

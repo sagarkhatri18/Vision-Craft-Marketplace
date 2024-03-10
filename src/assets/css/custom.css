@@ -56,12 +56,10 @@ form.login-form input.form-control {
 .normal-text {
   color: #374151;
   font-style: normal !important;
+  font-size: 17px;
 }
 
-/*********************************************************************************/
-
-/*****************globals*************/
-
+/******************************** PRODUCT DETAIL PAGE CSS - START *************************************************/
 .preview {
   display: -webkit-box;
   display: -webkit-flex;
@@ -256,4 +254,389 @@ form.login-form input.form-control {
   }
 }
 
-/*# sourceMappingURL=style.css.map */
+/******************************** PRODUCT DETAIL PAGE CSS - END *************************************************/
+
+/******************************** DAHSBOARD PAGE CSS - START *************************************************/
+.product-card-10 {
+  border: 1px solid #dee2e6;
+  /* width: 300px;
+  height: auto; */
+}
+
+.product-card-10 .product-card-image {
+  position: relative;
+}
+
+.product-card-10 .badge-ribbon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 45px;
+  height: 45px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  text-transform: uppercase;
+  background: #dc3545;
+  color: #fff;
+  z-index: 1;
+  border-radius: 50%;
+}
+
+.product-card-10 .product-media {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--bs-gray-300);
+}
+
+.product-card-10 .product-media img {
+  transition: ease all 0.35s;
+  transform: scale(1);
+  width: 100%;
+  height: 12vw;
+  object-fit: cover;
+}
+
+.product-card-10 .product-action {
+  padding-top: 8px;
+}
+
+.product-card-10 .product-action .btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d6efd;
+  color: #fff;
+  margin: 0 2px;
+  padding: 0;
+  border-color: unset !important;
+  border: unset !important;
+}
+
+@media (max-width: 575.98px) {
+  .product-card-10 .product-action .btn {
+    width: 26px;
+    height: 26px;
+    margin: 1px;
+    font-size: 12px;
+  }
+}
+
+.product-card-10 .product-action .btn:hover {
+  background: #212529;
+  color: #fff;
+}
+
+.product-card-10 .product-card-info {
+  text-align: center;
+  padding: 15px;
+}
+
+@media (max-width: 575.98px) {
+  .product-card-10 .product-card-info {
+    padding: 8px;
+  }
+}
+
+.product-card-10 .rating-star {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.product-card-10 .product-title {
+  font-size: 14px;
+  margin: 0;
+}
+
+.product-card-10 .product-title a {
+  color: #212529;
+}
+
+.product-card-10 .product-price {
+  margin-top: 8px;
+  line-height: normal;
+}
+
+.product-card-10:hover .product-media img {
+  transform: scale(1.03);
+}
+
+a {
+  text-decoration: none;
+}
+
+.col-centered {
+  float: none;
+  margin: 0 auto;
+}
+
+/******************************** DAHSBOARD PAGE CSS - END *************************************************/
+
+.widget-26 {
+  color: #3c4142;
+  font-weight: 400;
+}
+
+.widget-26 tr:first-child td {
+  border: 0;
+}
+
+.widget-26 .widget-26-job-emp-img img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+.widget-26 .widget-26-job-title {
+  min-width: 200px;
+}
+
+.widget-26 .widget-26-job-title a {
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: #3c4142;
+  line-height: 1.5;
+}
+
+.widget-26 .widget-26-job-title a:hover {
+  color: #68cbd7;
+  text-decoration: none;
+}
+
+.widget-26 .widget-26-job-title .employer-name {
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #3c4142;
+  font-size: 0.8125rem;
+  color: #3c4142;
+}
+
+.widget-26 .widget-26-job-title .employer-name:hover {
+  color: #68cbd7;
+  text-decoration: none;
+}
+
+.widget-26 .widget-26-job-title .time {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.widget-26 .widget-26-job-info {
+  min-width: 100px;
+  font-weight: 400;
+}
+
+.widget-26 .widget-26-job-info p {
+  line-height: 1.5;
+  color: #3c4142;
+  font-size: 0.8125rem;
+}
+
+.widget-26 .widget-26-job-info .location {
+  color: #3c4142;
+}
+
+.widget-26 .widget-26-job-salary {
+  min-width: 70px;
+  font-weight: 400;
+  color: #3c4142;
+  font-size: 0.8125rem;
+}
+
+.widget-26 .widget-26-job-category {
+  padding: 0.5rem;
+  display: inline-flex;
+  white-space: nowrap;
+  border-radius: 15px;
+}
+
+.widget-26 .widget-26-job-category .indicator {
+  width: 13px;
+  height: 13px;
+  margin-right: 0.5rem;
+  float: left;
+  border-radius: 50%;
+}
+
+.widget-26 .widget-26-job-category span {
+  font-size: 0.8125rem;
+  color: #3c4142;
+  font-weight: 600;
+}
+
+.widget-26 .widget-26-job-starred svg {
+  width: 20px;
+  height: 20px;
+  color: #fd8b2c;
+}
+
+.widget-26 .widget-26-job-starred svg.starred {
+  fill: #fd8b2c;
+}
+.bg-soft-base {
+  background-color: #e1f5f7;
+}
+.bg-soft-warning {
+  background-color: #fff4e1;
+}
+.bg-soft-success {
+  background-color: #d1f6f2;
+}
+.bg-soft-danger {
+  background-color: #fedce0;
+}
+.bg-soft-info {
+  background-color: #d7efff;
+}
+
+.search-form {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 1rem;
+}
+
+.search-form input {
+  height: 100%;
+  background: transparent;
+  border: 0;
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  height: 100%;
+  font-size: 1rem;
+}
+
+.search-form select {
+  background: transparent;
+  border: 0;
+  padding: 1rem;
+  height: 100%;
+  font-size: 1rem;
+}
+
+.search-form select:focus {
+  border: 0;
+}
+
+.search-form button {
+  height: 100%;
+  width: 100%;
+  font-size: 1rem;
+  border-width: 0;
+}
+
+.search-form button svg {
+  width: 24px;
+  height: 24px;
+}
+
+.search-body {
+  margin-bottom: 1.5rem;
+}
+
+.search-body .search-filters .filter-list {
+  margin-bottom: 1.3rem;
+}
+
+.search-body .search-filters .filter-list .title {
+  color: #3c4142;
+  margin-bottom: 1rem;
+}
+
+.search-body .search-filters .filter-list .filter-text {
+  color: #727686;
+}
+
+.search-body .search-result .result-header {
+  margin-bottom: 2rem;
+}
+
+.search-body .search-result .result-header .records {
+  color: #3c4142;
+}
+
+.search-body .search-result .result-header .result-actions {
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.search-body .search-result .result-header .result-actions .result-sorting {
+  display: flex;
+  align-items: center;
+}
+
+.search-body
+  .search-result
+  .result-header
+  .result-actions
+  .result-sorting
+  span {
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+}
+
+.search-body
+  .search-result
+  .result-header
+  .result-actions
+  .result-sorting
+  select {
+  color: #68cbd7;
+}
+
+.search-body
+  .search-result
+  .result-header
+  .result-actions
+  .result-sorting
+  select
+  option {
+  color: #3c4142;
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .search-body .search-filters {
+    display: flex;
+  }
+  .search-body .search-filters .filter-list {
+    margin-right: 1rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .col-lg-2 {
+    flex: 0 0 16.66667%;
+    max-width: 16.66667%;
+  }
+}
+
+.card-margin {
+  margin-bottom: auto;
+}
+.card {
+  border: 0;
+  box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+  -moz-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+  -ms-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+}
+.card.search-form{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #ffffff;
+  background-clip: border-box;
+  border: 1px solid #e6e4e9;
+  border-radius: 8px;
+  margin: 0;
+  width: 100%;
+}

@@ -122,6 +122,16 @@ const Category = () => {
     );
   };
 
+  const categoryImage = (category) => {
+    return (
+      <img
+        src={`${process.env.REACT_APP_API_BASE_URL}/${category.filePath}/thumbnails/${category.image}`}
+        alt={category.name}
+        style={{ width: "50px", height: "50px" }}
+      />
+    );
+  };
+
   return (
     <>
       <Container fluid>
@@ -147,6 +157,7 @@ const Category = () => {
               rowsPerPageOptions={[10, 25, 50]}
               tableStyle={{ minWidth: "50rem" }}
             >
+              <Column body={categoryImage} header="Image"></Column>
               <Column field="name" sortable header="Name"></Column>
               <Column field="slug" sortable header="Slug"></Column>
               <Column body={getCategoryStatus} header="Status"></Column>
@@ -164,7 +175,10 @@ const Category = () => {
             Upload Image
           </ModalHeader>
           <ModalBody>
-            <UploadCategoryImage categoryId={clickedCategory} closeModal={closeModal}/>
+            <UploadCategoryImage
+              categoryId={clickedCategory}
+              closeModal={closeModal}
+            />
           </ModalBody>
         </Modal>
       </Container>
