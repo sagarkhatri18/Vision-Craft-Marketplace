@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import Select from "react-select";
 import { Editor } from "primereact/editor";
-
+import { getUsers } from "../../../services/User";
 import { showLoader, hideLoader } from "../../../actions/Action";
 import { getCatgories } from "../../../services/Category";
 import {
@@ -114,6 +114,27 @@ const Update = () => {
       });
   }, []);
 
+  // load all the users
+  const loadUsers = useCallback(() => {
+    dispatch(showLoader());
+    getUsers()
+      .then((data) => {
+        dispatch(hideLoader());
+        const resultArray = [];
+        const apiResponse = data.data;
+        apiResponse.forEach((item) => {
+          if (item.role != "admin") {
+            resultArray.push(item);
+          }
+        });
+        setUsers(resultArray);
+      })
+      .catch((error) => {
+        dispatch(hideLoader());
+        toast.error("Error occured while fetching data");
+      });
+  }, []);
+
   // load the product detail
   const loadProduct = useCallback(() => {
     dispatch(showLoader());
@@ -121,15 +142,24 @@ const Update = () => {
       .then((data) => {
         dispatch(hideLoader());
         const apiResponse = data.data.data;
+
+        if (currentRole != "admin" && currentUserId != apiResponse.userId._id) {
+          navigate("/product/my");
+        }
+
         setState(apiResponse);
         setSelectedCategory({
           value: apiResponse.categoryId._id,
           label: apiResponse.categoryId.name,
         });
+        setSelectedUser({
+          value: apiResponse.userId._id,
+          label: apiResponse.userId.firstName,
+        });
       })
       .catch((error) => {
         dispatch(hideLoader());
-        toast.error("Error occured while fetching data");
+        navigate("/dashboard");
       });
   }, [params.id]);
 
@@ -139,10 +169,17 @@ const Update = () => {
     label: category.name,
   }));
 
+  // users select options
+  const userOptions = users.map((user) => ({
+    value: user._id,
+    label: user.firstName,
+  }));
+
   useEffect(() => {
     loadCategories();
+    loadUsers();
     loadProduct();
-  }, [loadCategories, loadProduct]);
+  }, [loadCategories, loadProduct, loadUsers]);
 
   // handle form submit
   const handleSubmit = (event) => {
@@ -168,7 +205,7 @@ const Update = () => {
         .then((data) => {
           dispatch(hideLoader());
           toast.success(data.data.message);
-          navigate("/product/my");
+          navigate(currentRole != "admin" ? "/product/my" : "/product");
         })
         .catch((error) => {
           dispatch(hideLoader());

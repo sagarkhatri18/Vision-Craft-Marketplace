@@ -110,13 +110,6 @@ const MyProduct = () => {
               rounded
             ></Button>
           </NavLink>
-          {/* <Button
-            onClick={() => openModal(category._id)}
-            type="button"
-            icon="pi pi-image"
-            className="btn btn-sm btn-borderless"
-            rounded
-          ></Button> */}
         </div>
       </>
     );

@@ -8,7 +8,8 @@ import { Tag } from "primereact/tag";
 import { useDispatch } from "react-redux";
 import { showLoader, hideLoader } from "../../../actions/Action";
 import { toast } from "react-toastify";
-import { getAllProducts } from "../../../services/Product";
+import alertify from "alertifyjs";
+import { getAllProducts, deleteProductFromId } from "../../../services/Product";
 
 const Product = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,25 @@ const Product = () => {
     loadProducts();
   }, [loadProducts]);
 
+  // delete the selected product
+  const deleteProduct = (id) => {
+    alertify.confirm(
+      "Delete",
+      "Are you sure want to delete the selected product?",
+      function () {
+        deleteProductFromId(id)
+          .then((data) => {
+            toast.success(data.data.message);
+            loadProducts();
+          })
+          .catch((error) => {
+            toast.error("Failed to delete the product");
+          });
+      },
+      function () {}
+    );
+  };
+
   const datatableHeader = (
     <div className="flex flex-wrap align-items-center justify-content-between gap-2">
       <span className="text-xl text-900 font-bold">Products</span>
@@ -54,6 +74,43 @@ const Product = () => {
 
   const getUserName = (product) =>
     product.userId.firstName + " " + product.userId.lastName;
+
+  const formatDate = (product) => new Date(product.createdAt).toLocaleString();
+
+  const actionBodyTemplate = (product) => {
+    return (
+      <>
+        <div className="d-inline-flex">
+          <NavLink to={`/product/update/${product._id}`}>
+            <Button
+              type="button"
+              title="Edit"
+              className="btn btn-sm btn-borderless"
+              icon="pi pi-pencil"
+              rounded
+            ></Button>
+          </NavLink>
+          <Button
+            onClick={() => deleteProduct(product._id)}
+            type="button"
+            title="Delete"
+            icon="pi pi-trash"
+            className="btn btn-sm btn-borderless"
+            rounded
+          ></Button>
+          <NavLink to={`/product/${product._id}`}>
+            <Button
+              type="button"
+              title="View Details"
+              className="btn btn-sm btn-borderless"
+              icon="pi pi-arrow-right"
+              rounded
+            ></Button>
+          </NavLink>
+        </div>
+      </>
+    );
+  };
 
   return (
     <Container fluid>
@@ -95,12 +152,12 @@ const Product = () => {
             ></Column>
             <Column field="addedBy" sortable header="Added By"></Column>
             <Column body={getProductStatus} header="Status"></Column>
-            {/* <Column body={formatDate} header="Created At"></Column>
+            <Column body={formatDate} header="Created At"></Column>
             <Column
               headerStyle={{ width: "5rem", textAlign: "center" }}
               bodyStyle={{ textAlign: "center", overflow: "visible" }}
               body={actionBodyTemplate}
-            /> */}
+            />
           </DataTable>
         </div>
       </Row>

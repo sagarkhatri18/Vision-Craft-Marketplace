@@ -1,9 +1,9 @@
 import React from "react";
-const TableList = React.lazy(() => import("views/TableList"));
-const Typography = React.lazy(() => import("views/Typography"));
-const Icons = React.lazy(() => import("views/Icons"));
-const Maps = React.lazy(() => import("views/Maps"));
-const Notifications = React.lazy(() => import("views/Notifications"));
+// const TableList = React.lazy(() => import("views/TableList"));
+// const Typography = React.lazy(() => import("views/Typography"));
+// const Icons = React.lazy(() => import("views/Icons"));
+// const Maps = React.lazy(() => import("views/Maps"));
+// const Notifications = React.lazy(() => import("views/Notifications"));
 
 const Dashboard = React.lazy(() => import("./views/pages/dashboard/Dashboard"));
 const Category = React.lazy(() => import("./views/pages/category/Category"));
@@ -122,46 +122,6 @@ const routes = [
     sidebar: false,
     icon: "nc-icon nc-notes",
     element: ProductDetail,
-    access: All,
-  },
-  {
-    path: "/table",
-    name: "Table List",
-    sidebar: true,
-    icon: "nc-icon nc-notes",
-    element: TableList,
-    access: All,
-  },
-  {
-    path: "/typography",
-    name: "Typography",
-    sidebar: true,
-    icon: "nc-icon nc-paper-2",
-    element: Typography,
-    access: All,
-  },
-  {
-    path: "/icons",
-    name: "Icons",
-    icon: "nc-icon nc-atom",
-    sidebar: true,
-    element: Icons,
-    access: All,
-  },
-  {
-    path: "/maps",
-    name: "Maps",
-    icon: "nc-icon nc-pin-3",
-    sidebar: true,
-    element: Maps,
-    access: All,
-  },
-  {
-    path: "/notifications",
-    name: "Notifications",
-    icon: "nc-icon nc-bell-55",
-    sidebar: true,
-    element: Notifications,
     access: All,
   },
 ];
