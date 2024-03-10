@@ -30,11 +30,11 @@ const AvailableCategory = () => {
 
   return (
     <>
-      <div className="row justify-content-center section-heading">
-        <div className="col-lg-6 text-center">
-          <h5 className="h3 mt-2">Available Categories</h5>
-        </div>
-      </div>
+      {/* <div className="row justify-content-center section-heading"> */}
+        {/* <div className="col-lg-6 text-center"> */}
+          <h5 className="h4 mt-2">Available Categories</h5>
+        {/* </div> */}
+      {/* </div> */}
       <Row>
         {categories.map((item, index) => {
           const image = `${process.env.REACT_APP_API_BASE_URL}/${item.filePath}/${item.image}`;

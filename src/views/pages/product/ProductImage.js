@@ -7,25 +7,33 @@ import { showLoader, hideLoader } from "../../../actions/Action";
 import { Error, errorResponse } from "../../../helpers/Error";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { loggedInRole } from "../../../helpers/IsLoggedIn";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Button } from "primereact/button";
+import { findProduct } from "../../../services/Product";
 import {
   uploadImage,
   productImages,
   deleteImageFromId,
   updateMainImage,
 } from "../../../services/ProductImage";
-import { NavLink } from "react-router-dom";
+import {
+  getCurrentUserDetails,
+  loggedInRole,
+} from "../../../helpers/IsLoggedIn";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
 const ProductImage = () => {
   const dispatch = useDispatch();
   const params = useParams();
+  const navigate = useNavigate();
   const currentRole = loggedInRole().toLowerCase();
   const [error, setError] = useState("");
   const [images, setImages] = useState(null);
+
+  const loggedInDetail = getCurrentUserDetails();
+  const currentUserId =
+    currentRole != "admin" && loggedInDetail != null ? loggedInDetail.id : "";
 
   const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
     accept: { "image/*": [] },
@@ -73,11 +81,28 @@ const ProductImage = () => {
         dispatch(hideLoader());
         toast.error("Error occured while fetching data");
       });
-  }, []);
+  }, [params.id]);
+
+  // find product from id
+  const findProductFromId = useCallback(() => {
+    dispatch(showLoader());
+    findProduct(params.id)
+      .then((data) => {
+        dispatch(hideLoader());
+        const returnData = data.data.data;
+        if (currentRole != "admin" && currentUserId != returnData.userId._id) {
+          navigate("/product/my");
+        } else loadProductImages();
+      })
+      .catch((error) => {
+        dispatch(hideLoader());
+        navigate("/dashboard");
+      });
+  }, [params.id, loadProductImages]);
 
   useEffect(() => {
-    loadProductImages();
-  }, [loadProductImages]);
+    findProductFromId();
+  }, [findProductFromId]);
 
   const thumbnailImage = (image) => {
     return (

@@ -148,7 +148,6 @@ const findIfAnyImageExists = async (productId) => {
 
 // fetch all images of product
 exports.loadProductImages = async (req, res, next) => {
-  console.log(findIfAnyImageExists(req.params.productId));
   try {
     const images = await ProductImage.find({
       productId: req.params.productId,

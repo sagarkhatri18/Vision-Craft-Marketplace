@@ -36,11 +36,11 @@ const LatestProduct = () => {
   return (
     <Row>
       <Col md="12">
-        <div className="row justify-content-center section-heading">
-          <div className="col-lg-6 text-center">
-            <h3 className="h3 mt-2">Latest Arrivals</h3>
-          </div>
-        </div>
+        {/* <div className="row justify-content-center section-heading"> */}
+          {/* <div className="col-lg-6 text-center"> */}
+            <h3 className="h4 mt-2">Latest Arrivals</h3>
+          {/* </div> */}
+        {/* </div> */}
         <div className="row g-3 g-lg-4">
           {products.map((item, index) => {
             return (

@@ -14,6 +14,7 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Tag } from "primereact/tag";
 import alertify from "alertifyjs";
+import placeHolderImage from "../../../assets/img/placeholderImage.png";
 
 const MyProduct = () => {
   const dispatch = useDispatch();
@@ -110,8 +111,32 @@ const MyProduct = () => {
               rounded
             ></Button>
           </NavLink>
+          <NavLink to={`/product/image/${product._id}`}>
+            <Button
+              type="button"
+              icon="pi pi-image"
+              className="btn btn-sm btn-borderless"
+              rounded
+            ></Button>
+          </NavLink>
         </div>
       </>
+    );
+  };
+
+  const productImage = (product) => {
+    const source = `${process.env.REACT_APP_API_BASE_URL}/${product.filePath}/thumbnails/${product.image}`;
+    const imageSrc = source ? source : placeHolderImage;
+
+    return (
+      <img
+        src={imageSrc}
+        alt={product.title}
+        style={{ width: "50px", height: "50px" }}
+        onError={(e) => {
+          e.target.src = placeHolderImage;
+        }}
+      />
     );
   };
 
@@ -139,6 +164,7 @@ const MyProduct = () => {
             rowsPerPageOptions={[10, 25, 50]}
             tableStyle={{ minWidth: "50rem" }}
           >
+            <Column body={productImage} header="Image"></Column>
             <Column field="title" sortable header="Title"></Column>
             <Column body={getCategoryName} sortable header="Category"></Column>
             <Column
