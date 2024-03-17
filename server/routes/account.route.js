@@ -11,6 +11,6 @@ router.post(
   accountController.register
 );
 router.get("/account/verify/:id/:token", accountController.verify);
-router.post("/account/forgotPassword", accountController.forgotPassword);
+router.post("/account/forgotpassword", accountController.forgotpassword);
 
 module.exports = router;

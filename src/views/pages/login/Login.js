@@ -143,6 +143,15 @@ const Login = () => {
                           </button>
                         </div>
                         <p className="mt-4 text-sm text-center">
+                         
+                          <a
+                            href="/forgetpassword"
+                            className="text-primary text-gradient font-weight-bold"
+                          >
+                            Forget Your Passowrd
+                          </a>
+                        </p>
+                        <p className="mt-4 text-sm text-center">
                           Or Start using &nbsp;
                           <a
                             href="/dashboard"
