@@ -56,7 +56,7 @@ const AdminLayout = () => {
           </div>
           <Footer />
         </div>
-        <ToastContainer />
+        <ToastContainer position="bottom-right"/>
         <Loader/>
       </div>
       {/* <FixedPlugin

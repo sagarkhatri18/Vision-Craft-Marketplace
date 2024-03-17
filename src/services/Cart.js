@@ -17,3 +17,26 @@ export const add = async (data) => {
     config
   );
 };
+
+// update the cart item
+export const update = async (id, data) => {
+  const { quantity } = data;
+  return await axios.put(
+    process.env.REACT_APP_API_URL + `cart/${id}`,
+    { quantity },
+    config
+  );
+};
+
+// delete the particular product
+export const deleteFromId = async (id) => {
+  return await axios.delete(
+    process.env.REACT_APP_API_URL + `cart/${id}`,
+    config
+  );
+};
+
+// fetch add to cart items of certain user
+export const index = async (userId) => {
+  return axios.get(process.env.REACT_APP_API_URL + `cart/${userId}`, config);
+};

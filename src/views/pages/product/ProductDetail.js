@@ -12,12 +12,6 @@ import placeHolderImage from "../../../assets/img/placeholderImage.png";
 import { getAllProductsFromCategoryId } from "../../../services/Product";
 import { NavLink } from "react-router-dom";
 import { Error, errorResponse } from "../../../helpers/Error";
-import {
-  getCurrentUserDetails,
-  isLoggedIn,
-  isAdminLogin,
-} from "../../../helpers/IsLoggedIn";
-import { add } from "../../../services/Cart";
 import { useCart } from "../../../context/CartContext";
 
 const ProductDetail = () => {
@@ -102,33 +96,7 @@ const ProductDetail = () => {
   // add the prouduct to the cart
   const addToCartSubmit = (e) => {
     e.preventDefault();
-    if (isLoggedIn() && !isAdminLogin()) {
-      const formData = {
-        quantity: productCount,
-        productId: params.id,
-        userId: getCurrentUserDetails().id,
-      };
-
-      add(formData)
-        .then((data) => {
-          dispatch(hideLoader());
-          setToLocalStorage(productCount);
-          toast.success(data.data.message);
-        })
-        .catch((error) => {
-          dispatch(hideLoader());
-          setError(errorResponse(error));
-        });
-    } else {
-      toast.error(`Sorry, you need to login first as a customer`);
-    }
-  };
-
-  // set to the local storage
-  const setToLocalStorage = (productCount) => {
-    const currentQuantity = parseInt(localStorage.getItem("cartQuantity"));
-    localStorage.setItem("cartQuantity", productCount + currentQuantity);
-    addToCart(productCount);
+    addToCart({ productId: params.id, quantity: productCount });
   };
 
   useEffect(() => {
@@ -241,7 +209,7 @@ const ProductDetail = () => {
                             <input
                               type="button"
                               defaultValue="-"
-                              className="button-minus border rounded-circle  icon-shape icon-sm mx-1"
+                              className="button-minus border rounded-circle icon-shape icon-sm mx-1"
                               onClick={decreaseQuantity}
                               data-field="quantity"
                             />

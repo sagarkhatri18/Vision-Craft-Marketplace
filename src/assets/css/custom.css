@@ -623,18 +623,19 @@ hr {
   font-weight: 600;
 }
 
-icon-shape {
-  display: inline-flex;
+.input-group {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  vertical-align: middle;
 }
 
-.icon-sm {
-  width: 2rem;
-  height: 2rem;
-  
+.button-minus,
+.button-plus {
+  height: 30px;
+  width: 30px;
+}
+
+.quantity-field {
+  flex-grow: 1;
 }
 
 /******************************** SEARCH RESULT PAGE CSS - END ***************************************/

@@ -46,13 +46,6 @@ exports.login = async (req, res, next) => {
           return total + parseInt(item.quantity);
         }, 0);
 
-        // let cartQuantityCounter = 0;
-        // if (userCartItems.length > 0) {
-        //   userCartItems.map((item) => {
-        //     cartQuantityCounter = cartQuantityCounter + parseInt(item.quantity);
-        //   });
-        // }
-
         return res.status(200).json({
           message: "User successfully Logged in",
           success: true,
