@@ -26,3 +26,8 @@ export const Logout = () => {
   localStorage.clear();
   window.location.reload();
 };
+export const forgetpassword = async (email, password) => {
+  return axios.post(process.env.REACT_APP_API_URL + `forgetpassword`, {
+    email: email,
+  });
+};

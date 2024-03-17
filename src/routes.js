@@ -24,6 +24,7 @@ const All = ["customer", "admin", "all"];
 const Admin = ["admin"];
 const Customer = ["customer"];
 const AdminCustomer = ["admin", "customer"];
+import ForgetPassword from './views/pages/login/ForgetPassword'; 
 
 const routes = [
   {
@@ -129,6 +130,14 @@ const routes = [
     icon: "nc-icon nc-notes",
     element: ProductImageUpload,
     access: AdminCustomer,
+  },
+  {
+    path: "/forgetpassword",
+    name: "forgetpassword",
+    sidebar: true,
+    icon: "nc-icon nc-settings-gear-64",
+    element: ForgetPassword,
+    access: All,
   },
 ];
 
