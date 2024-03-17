@@ -1,7 +1,7 @@
 import React from "react";
 
 const Dashboard = React.lazy(() => import("./views/pages/dashboard/Dashboard"));
-const AddToCart = React.lazy(() => import("./views/pages/dashboard/AddToCart"));
+const CartItems = React.lazy(() => import("./views/pages/dashboard/CartItems"));
 const ProductSearch = React.lazy(() =>
   import("./views/pages/dashboard/SearchResult")
 );
@@ -143,11 +143,11 @@ const routes = [
     access: All,
   },
   {
-    path: "/add-to-cart",
+    path: "/cart-items",
     name: "Add To Cart",
     sidebar: false,
     icon: "nc-icon nc-notes",
-    element: AddToCart,
+    element: CartItems,
     access: Customer,
   },
 ];

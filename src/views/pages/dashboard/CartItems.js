@@ -223,21 +223,28 @@ const AddToCart = () => {
             </tbody>
           </table>
         </span>
-        <div className="float-start">
-          <p>
-            <i>
-              Note: $15 shipping cost will be charge for the order less than $50
-            </i>
-          </p>
+        <div className="clearfix below-contents mb-3">
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <div>
+              <div className="float-start">
+                <p>
+                  <i>
+                    Note: $15 shipping cost will be charged for orders less than
+                    $50
+                  </i>
+                </p>
+              </div>
+            </div>
+            <div className="d-flex align-items-center">
+              <button type="button" className="btn btn-danger btn-md mr-2">
+                Go To Checkout
+              </button>
+              <a href="index.html" className="btn btn-success btn-md">
+                Continue Shopping
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="clearfix mb-3">
-        <button type="button" className="btn btn-danger btn-md float-end mr-2">
-          Go To Checkout
-        </button>
-        <a href="index.html" className="btn btn-success btn-md float-end">
-          Continue Shopping
-        </a>
       </div>
     </>
   );

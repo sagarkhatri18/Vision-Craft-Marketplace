@@ -55,7 +55,7 @@ const Header = () => {
         </Nav>
         <Nav className="ml-auto" navbar>
           <Nav.Item className="d-flex align-items-center">
-            <NavLink to={"/add-to-cart"}>
+            <NavLink to={"/cart-items"}>
               <CartIcon />
             </NavLink>
           </Nav.Item>
