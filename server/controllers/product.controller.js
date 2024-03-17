@@ -203,18 +203,48 @@ exports.delete = async (req, res) => {
   }
 };
 
-// find product from LIKE title
-exports.searchProductFromTitle = async (req, res) => {
+// search product
+exports.searchProduct = async (req, res) => {
   try {
-    const colName = req.params.title;
+    const { title, categoryId, dateFrom, dateTo, priceFrom, priceTo } =
+      req.body;
 
-    const searchProducts = await Product.find({
-      slug: { $regex: ".*" + colName + ".*" },
+    let query = {
       isActive: true,
-    })
+    };
+
+    if (title) {
+      query.slug = { $regex: ".*" + title + ".*" };
+    }
+
+    if (categoryId) {
+      query.categoryId = categoryId;
+    }
+
+    // date filter
+    if (dateFrom && dateTo) {
+      query.createdAt = { $gte: new Date(dateFrom), $lte: new Date(dateTo) };
+    } else if (dateFrom) {
+      query.createdAt = { $gte: new Date(dateFrom) };
+    } else if (dateTo) {
+      query.createdAt = { $lte: new Date(dateTo) };
+    }
+
+    // price filter
+    if (priceFrom && priceTo) {
+      query.priceAfterDiscount = { $gte: priceFrom, $lte: priceTo };
+    } else if (priceFrom) {
+      query.priceAfterDiscount = { $gte: priceFrom };
+    } else if (priceTo) {
+      query.priceAfterDiscount = { $lte: priceTo };
+    }
+
+    const searchProducts = await Product.find(query)
       .populate("categoryId")
       .populate("userId");
+
     let foundProductsLength = searchProducts.length;
+
     if (foundProductsLength > 0) {
       res.status(200).json({
         message: "Products found successfully",
@@ -223,15 +253,16 @@ exports.searchProductFromTitle = async (req, res) => {
       });
     } else {
       res.status(200).json({
-        message: "Sorry, no any product found",
+        message: "Sorry, no products found",
         data: [],
         length: foundProductsLength,
       });
     }
   } catch (error) {
+    console.error(error);
     res.status(500).send({
       success: false,
-      message: "Something went Wrong",
+      message: "Something went wrong",
     });
   }
 };

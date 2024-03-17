@@ -15,14 +15,14 @@ function Sidebar({ color, image, routes }) {
       <div className="sidebar-background" />
       <div className="sidebar-wrapper">
         <div className="logo d-flex align-items-center justify-content-start">
-          <a href="#" className="simple-text logo-mini mx-1">
+          <span className="simple-text logo-mini mx-1">
             <div className="logo-img">
               <img src={logo} alt="..." />
             </div>
-          </a>
-          <a className="simple-text" href="#">
-            Vision Craft Marketplace
-          </a>
+          </span>
+          <span className="simple-text">
+            <h6>Vision Craft Marketplace</h6>
+          </span>
         </div>
         <Nav>
           {routes.map((prop, key) => {

@@ -1,24 +1,10 @@
-import React, { useState } from "react";
-import { searchProduct } from "../../../services/Product";
-import { useNavigate } from "react-router";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 
 const SearchBar = () => {
   const navigate = useNavigate();
+  const params = useParams();
   const [title, setTitle] = useState(" ");
-
-  // search products on the basis of title
-  const loadProducts = async (title) => {
-    if (title.trim() != "") {
-      await searchProduct(title)
-        .then(async (data) => {
-          const apiResponse = data.data.data;
-          setTitle(apiResponse);
-        })
-        .catch((error) => {
-          toast.error("Error occured while fetching data");
-        });
-    }
-  };
 
   // handle input fields onchange value
   const handleChange = async (e) => {
@@ -30,10 +16,14 @@ const SearchBar = () => {
     event.preventDefault();
 
     if (title.trim() != "") {
-      navigate(`/product/search/${title}`)
-      //loadProducts(title);
+      navigate(`/product/search/${title}`);
     }
   };
+
+  // Fill the search bar with the URL parameter on initial render
+  useEffect(() => {
+    setTitle(params.title || ""); // Set the search term from URL parameter
+  }, [params.title]);
 
   return (
     <div className="nav-item" style={{ width: "40%" }}>
@@ -50,6 +40,7 @@ const SearchBar = () => {
                       className="form-control"
                       id="title"
                       onChange={handleChange}
+                      value={title}
                       name="title"
                     />
                   </div>

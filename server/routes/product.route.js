@@ -10,7 +10,7 @@ router.get("/fetch/active", productController.findActiveProducts);
 router.get("/fetch/category/:categoryId", productController.findProductsFromCategoryId);
 router.get("/fetch-from-userid/:userId", productController.userProducts);
 router.put("/:id", productController.update);
-router.get('/search/:title', productController.searchProductFromTitle)
+router.post('/search', productController.searchProduct)
 
 router.get("/fetch/images/:productId", productImageController.loadProductImages);
 router.post("/upload", productImageController.uploadImage);

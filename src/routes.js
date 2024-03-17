@@ -2,8 +2,8 @@ import React from "react";
 
 const Dashboard = React.lazy(() => import("./views/pages/dashboard/Dashboard"));
 const CartItems = React.lazy(() => import("./views/pages/dashboard/CartItems"));
-const ProductSearch = React.lazy(() =>
-  import("./views/pages/dashboard/SearchResult")
+const Search = React.lazy(() =>
+  import("./views/pages/dashboard/Search")
 );
 const Category = React.lazy(() => import("./views/pages/category/Category"));
 const AddCategory = React.lazy(() => import("./views/pages/category/Create"));
@@ -135,11 +135,11 @@ const routes = [
     access: AdminCustomer,
   },
   {
-    path: "/product/search/:title",
+    path: "/product/search",
     name: "Product Search",
-    sidebar: false,
-    icon: "nc-icon nc-notes",
-    element: ProductSearch,
+    sidebar: true,
+    icon: "nc-icon nc-zoom-split",
+    element: Search,
     access: All,
   },
   {

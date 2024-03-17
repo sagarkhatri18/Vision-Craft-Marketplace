@@ -50,9 +50,9 @@ const Header = () => {
         <span className="navbar-toggler-bar burger-lines"></span>
       </Navbar.Toggle>
       <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto" navbar style={{ width: "80%" }}>
+        {/* <Nav className="mr-auto" navbar style={{ width: "80%" }}>
           <SearchBar />
-        </Nav>
+        </Nav> */}
         <Nav className="ml-auto" navbar>
           <Nav.Item className="d-flex align-items-center">
             <NavLink to={"/cart-items"}>

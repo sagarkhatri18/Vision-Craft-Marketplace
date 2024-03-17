@@ -98,8 +98,15 @@ export const deleteProductFromId = async (id) => {
 };
 
 // search product from product's title
-export const searchProduct = async (title) => {
-  return await axios.get(
-    process.env.REACT_APP_API_URL + `product/search/${title}`
-  );
+export const searchProduct = async (data) => {
+  const { title, categoryId, dateFrom, dateTo, priceFrom, priceTo } = data;
+
+  return await axios.post(process.env.REACT_APP_API_URL + `product/search`, {
+    title,
+    categoryId,
+    dateFrom,
+    dateTo,
+    priceFrom,
+    priceTo,
+  });
 };
