@@ -1,6 +1,10 @@
 import React from "react";
 
 const Dashboard = React.lazy(() => import("./views/pages/dashboard/Dashboard"));
+const AddToCart = React.lazy(() => import("./views/pages/dashboard/AddToCart"));
+const ProductSearch = React.lazy(() =>
+  import("./views/pages/dashboard/SearchResult")
+);
 const Category = React.lazy(() => import("./views/pages/category/Category"));
 const AddCategory = React.lazy(() => import("./views/pages/category/Create"));
 const UpdateCategory = React.lazy(() =>
@@ -129,6 +133,22 @@ const routes = [
     icon: "nc-icon nc-notes",
     element: ProductImageUpload,
     access: AdminCustomer,
+  },
+  {
+    path: "/product/search/:title",
+    name: "Product Search",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: ProductSearch,
+    access: All,
+  },
+  {
+    path: "/add-to-cart",
+    name: "Add To Cart",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: AddToCart,
+    access: Customer,
   },
 ];
 

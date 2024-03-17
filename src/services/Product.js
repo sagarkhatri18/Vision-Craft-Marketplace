@@ -96,3 +96,10 @@ export const deleteProductFromId = async (id) => {
     config
   );
 };
+
+// search product from product's title
+export const searchProduct = async (title) => {
+  return await axios.get(
+    process.env.REACT_APP_API_URL + `product/search/${title}`
+  );
+};

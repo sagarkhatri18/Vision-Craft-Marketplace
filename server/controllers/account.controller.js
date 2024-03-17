@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const { User } = require("../model/user.model");
 const { Token } = require("../model/token.model");
+const { cartItem } = require("../model/cartItem.model");
 const { tokenSign } = require("../services/helper");
 const sendEmail = require("../services/email");
 
@@ -26,7 +27,7 @@ exports.login = async (req, res, next) => {
     }
 
     // compare the user's password with the one provided from the user from login form
-    bcrypt.compare(password, user.password).then(function (result) {
+    bcrypt.compare(password, user.password).then(async function (result) {
       if (result) {
         // check if the email is verified or not
         if (!user.verified) {
@@ -37,16 +38,28 @@ exports.login = async (req, res, next) => {
 
         const token = tokenSign(user);
 
-        // res.cookie("jwt", token, {
-        //   httpOnly: true,
-        //   maxAge: maxAge * 1000, // 3hrs in ms
-        // });
+        let userCartItems = await cartItem
+          .find({ userId: user._id })
+          .select("quantity");
+
+        const cartQuantityCounter = userCartItems.reduce((total, item) => {
+          return total + parseInt(item.quantity);
+        }, 0);
+
+        // let cartQuantityCounter = 0;
+        // if (userCartItems.length > 0) {
+        //   userCartItems.map((item) => {
+        //     cartQuantityCounter = cartQuantityCounter + parseInt(item.quantity);
+        //   });
+        // }
+
         return res.status(200).json({
           message: "User successfully Logged in",
           success: true,
           user: user._id,
           role: user.role,
           token: token,
+          cartQuantity: cartQuantityCounter,
         });
       } else {
         return res
@@ -114,7 +127,6 @@ exports.register = async (req, res, next) => {
 // verify the account
 exports.verify = async (req, res, next) => {
   try {
-    
     const user = await User.findOne({ _id: req.params.id });
     if (!user) return res.status(400).send("Invalid link");
 
@@ -125,12 +137,12 @@ exports.verify = async (req, res, next) => {
 
     if (!token) return res.status(400).send("Invalid link");
 
-    await User.findOneAndUpdate({_id: user._id}, {verified: true });
-    await Token.findOneAndDelete({_id: token._id});
+    await User.findOneAndUpdate({ _id: user._id }, { verified: true });
+    await Token.findOneAndDelete({ _id: token._id });
 
     res.send("email verified sucessfully");
   } catch (error) {
-    res.send(error.message)
+    res.send(error.message);
     res.status(400).send("An error occured");
   }
 };

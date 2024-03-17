@@ -202,3 +202,36 @@ exports.delete = async (req, res) => {
     });
   }
 };
+
+// find product from LIKE title
+exports.searchProductFromTitle = async (req, res) => {
+  try {
+    const colName = req.params.title;
+
+    const searchProducts = await Product.find({
+      slug: { $regex: ".*" + colName + ".*" },
+      isActive: true,
+    })
+      .populate("categoryId")
+      .populate("userId");
+    let foundProductsLength = searchProducts.length;
+    if (foundProductsLength > 0) {
+      res.status(200).json({
+        message: "Products found successfully",
+        data: searchProducts,
+        length: foundProductsLength,
+      });
+    } else {
+      res.status(200).json({
+        message: "Sorry, no any product found",
+        data: [],
+        length: foundProductsLength,
+      });
+    }
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Something went Wrong",
+    });
+  }
+};

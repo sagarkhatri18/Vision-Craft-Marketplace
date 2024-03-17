@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
 import { isLoggedIn } from "../../../src/helpers/IsLoggedIn";
 import { Logout } from "../../services/Services";
 import routes from "routes.js";
 import SearchBar from "../../views/pages/dashboard/SearchBar";
 import avatar from "../../assets/img/default-avatar.png";
+import CartIcon from "./CartIcon";
 
 const Header = () => {
   const location = useLocation();
@@ -53,6 +54,11 @@ const Header = () => {
           <SearchBar />
         </Nav>
         <Nav className="ml-auto" navbar>
+          <Nav.Item className="d-flex align-items-center">
+            <NavLink to={"/add-to-cart"}>
+              <CartIcon />
+            </NavLink>
+          </Nav.Item>
           {loggedIn ? (
             <>
               <Dropdown as={Nav.Item}>

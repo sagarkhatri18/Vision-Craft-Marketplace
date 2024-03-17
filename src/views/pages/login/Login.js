@@ -49,6 +49,7 @@ const Login = () => {
             dispatch(hideLoader());
             const token = response.token;
             localStorage.setItem("token", token);
+            localStorage.setItem("cartQuantity", response.cartQuantity);
             navigate("/dashboard");
           } else {
             dispatch(hideLoader());

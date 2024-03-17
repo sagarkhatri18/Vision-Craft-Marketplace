@@ -3,10 +3,10 @@ const initialState = {
   sidebarShow: "responsive",
 };
 
-export const Reducers = (state = initialState, { type, ...rest }) => {
+export const Reducers = (state = initialState, { type, payload }) => {
   switch (type) {
     case "set":
-      return { ...state, ...rest };
+      return { ...state, ...action };
 
     case "SHOW_LOADER":
       return { ...state, loading: true };
