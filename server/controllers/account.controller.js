@@ -3,7 +3,7 @@ const { User } = require("../model/user.model");
 const { Token } = require("../model/token.model");
 const { cartItem } = require("../model/cartItem.model");
 const { tokenSign } = require("../services/helper");
-const sendEmail = require("../services/email");
+const { sendEmail, sendPasswordResetEmail } = require("../services/email");
 
 exports.login = async (req, res, next) => {
   try {
@@ -137,5 +137,121 @@ exports.verify = async (req, res, next) => {
   } catch (error) {
     res.send(error.message);
     res.status(400).send("An error occured");
+  }
+};
+
+// load data from token
+exports.findUserFromToken = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ _id: req.params.userId });
+    if (!user)
+      return res.status(400).json({
+        status: false,
+        message: "Invalid link provided",
+      });
+
+    const token = await Token.findOne({
+      userId: user._id,
+      token: req.params.token,
+    });
+
+    if (!token)
+      return res.status(400).json({
+        status: false,
+        message: "Invalid link provided",
+      });
+
+    return res.status(200).json({
+      success: true,
+      message: "Data fetched successfully",
+      data: user,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: "Failed to send the password reset link",
+      success: false,
+    });
+  }
+};
+
+// password reset
+exports.resetPassword = async (req, res, next) => {
+  try {
+    const reqParam = req.body;
+
+    const user = await User.findOne({ email: reqParam.email });
+    if (!user) {
+      return res.status(500).json({
+        success: false,
+        message: "Sorry, the email doesn't exist",
+      });
+    }
+
+    // save in the token table
+    let token = await Token.create({
+      userId: user._id,
+      token: require("crypto").randomBytes(32).toString("hex"),
+      remark: "password-reset",
+    });
+
+    const emailData = {
+      name: `${user.firstName} ${user.lastName}`,
+      mail: user.email,
+      subject: "Password Reset",
+      userId: user._id,
+      token: token.token,
+      baseURL: reqParam.baseURL,
+    };
+
+    await sendPasswordResetEmail(emailData);
+
+    res.status(200).json({
+      message:
+        "Password reset link has been successfully sent to your email. Please check your email.",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: "Failed to send the password reset link",
+      error: error.message,
+    });
+  }
+};
+
+// change password
+exports.changePassword = async (req, res, next) => {
+  try {
+    const { userId, password, currentPassword } = req.body;
+
+    const user = await User.findById(userId);
+
+    // Check if current password is provided
+    if (currentPassword) {
+      // Validate current password
+      const isPasswordValid = await bcrypt.compare(
+        currentPassword,
+        user.password
+      );
+      if (!isPasswordValid) {
+        return res.status(400).json({
+          success: false,
+          message: "Current password is incorrect",
+        });
+      }
+    }
+
+    // Update user's password
+    user.password = password;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "User password has been successfully updated",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: "Failed to update the password",
+      error: error.message,
+    });
   }
 };

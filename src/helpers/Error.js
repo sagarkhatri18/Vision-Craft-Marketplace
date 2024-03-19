@@ -33,3 +33,21 @@ export const Error = (props) => {
     </>
   );
 };
+
+export const LoginFormError = (props) => {
+  return (
+    <>
+      {props.errors !== "" ? (
+        <div className="alert fade show form-error" role="alert">
+          <ul className="error-ul">
+            {Object.keys(props.errors).map((err, index) => (
+              <li key={index}>{props.errors[err].msg}</li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        ""
+      )}
+    </>
+  );
+};

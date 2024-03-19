@@ -2,8 +2,9 @@ import React from "react";
 
 const Dashboard = React.lazy(() => import("./views/pages/dashboard/Dashboard"));
 const CartItems = React.lazy(() => import("./views/pages/dashboard/CartItems"));
-const Search = React.lazy(() =>
-  import("./views/pages/dashboard/Search")
+const Search = React.lazy(() => import("./views/pages/dashboard/Search"));
+const ChangePassword = React.lazy(() =>
+  import("./views/pages/login/ChangePassword")
 );
 const Category = React.lazy(() => import("./views/pages/category/Category"));
 const AddCategory = React.lazy(() => import("./views/pages/category/Create"));
@@ -148,6 +149,14 @@ const routes = [
     sidebar: false,
     icon: "nc-icon nc-notes",
     element: CartItems,
+    access: Customer,
+  },
+  {
+    path: "/change-password",
+    name: "Change Password",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: ChangePassword,
     access: Customer,
   },
 ];

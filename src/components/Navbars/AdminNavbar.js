@@ -82,7 +82,10 @@ const Header = () => {
                     />
                   </span>
                 </Dropdown.Toggle>
-                <Dropdown.Menu aria-labelledby="navbarDropdownMenuLink">
+                <Dropdown.Menu aria-labelledby="navbarDropdownMenuLink" style={{ right: 0, left: "auto" }}>
+                  <Dropdown.Item href="/change-password">
+                    Change Password
+                  </Dropdown.Item>
                   <Dropdown.Item href="/login" onClick={() => Logout()}>
                     Logout
                   </Dropdown.Item>

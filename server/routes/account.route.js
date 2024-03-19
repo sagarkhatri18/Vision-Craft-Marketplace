@@ -11,5 +11,8 @@ router.post(
   accountController.register
 );
 router.get("/account/verify/:id/:token", accountController.verify);
+router.get("/user-detail/:userId/:token", accountController.findUserFromToken);
+router.post("/reset-password", accountController.resetPassword);
+router.post("/change-password", accountController.changePassword);
 
 module.exports = router;

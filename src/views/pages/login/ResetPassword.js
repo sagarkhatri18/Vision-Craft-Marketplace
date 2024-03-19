@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Nav } from "react-bootstrap";
-import { login } from "../../../../src/services/Services";
+import { passwordReset } from "../../../../src/services/Services";
 import { useNavigate } from "react-router-dom";
 import "../../../assets/css/login/material-dashboard.min.css";
 import backgroundImage from "../../../assets/img/login-banner.avif";
@@ -11,26 +11,25 @@ import "react-toastify/dist/ReactToastify.css";
 import SimpleReactValidator from "simple-react-validator";
 import Loader from "../../../helpers/Loading";
 import { useDispatch } from "react-redux";
+import { LoginFormError, errorResponse } from "../../../helpers/Error";
 import { showLoader, hideLoader } from "../../../actions/Action";
 
-const Login = () => {
+const ResetPassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const baseURL = window.location.origin;
 
   // Validator Imports
   const validator = useRef(new SimpleReactValidator()).current;
   const [, forceUpdate] = useState();
 
-  const [state, setState] = useState({
-    email: "admin@admin.com",
-    password: "Canada@123",
-  });
+  const [email, setEmail] = useState("");
 
   const handleChange = (e) => {
-    setState((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
+    setEmail(e.target.value);
   };
 
   const handleSubmit = (event) => {
@@ -38,29 +37,16 @@ const Login = () => {
     dispatch(showLoader());
 
     if (validator.allValid()) {
-      const email = state.email;
-      const password = state.password
-
-      login(email, password)
+      passwordReset({ email, baseURL })
         .then((res) => {
           const response = res.data;
-
-          if (response.success) {
-            dispatch(hideLoader());
-            const token = response.token;
-            localStorage.setItem("token", token);
-            localStorage.setItem("cartQuantity", response.cartQuantity);
-            navigate("/dashboard");
-          } else {
-            dispatch(hideLoader());
-            toast.error("Invalid email or Password");
-          }
+          setSuccess(response.message);
+          setError("");
+          dispatch(hideLoader());
         })
         .catch((error) => {
-          if (error.response.data.message != undefined)
-            toast.error(error.response.data.message);
-          else toast.error("Login failed");
           dispatch(hideLoader());
+          setError(errorResponse(error));
         });
     } else {
       dispatch(hideLoader());
@@ -89,81 +75,62 @@ const Login = () => {
                         <h4 className="text-white font-weight-bolder text-center">
                           <Nav.Link
                             data-toggle="dropdown"
-                            href="user/dashboard"
+                            href="/dashboard"
                             className="m-0"
                           >
-                            Vision Craft Marketplace
+                            {process.env.REACT_APP_NAME}
                           </Nav.Link>
                         </h4>
                         <h5 className="text-white font-weight-bolder text-center mt-2 mb-0">
-                          Sign in
+                          Password Reset
                         </h5>
                       </div>
                     </div>
                     <div className="card-body">
+                      <LoginFormError errors={error} />
+                      {success ? (
+                        <div
+                          className="alert alert-default fade show form-error"
+                          role="alert"
+                        >
+                          {success}
+                        </div>
+                      ) : (
+                        ""
+                      )}
+
                       <form
                         role="form"
-                        onSubmit={handleSubmit}
                         className="login-form text-start"
+                        onSubmit={handleSubmit}
                       >
                         <div className="input-group input-group-outline my-3">
                           <label className="form-label"></label>
                           <input
                             type="email"
                             name="email"
-                            value={state.email}
+                            value={email}
                             className="form-control"
                             onChange={handleChange}
-                            placeholder="Email"
+                            placeholder="Enter your Email"
                           />
-                          {validator.message("email", state.email, "required")}
+                          {validator.message("email", email, "required")}
                         </div>
-                        <div className="input-group input-group-outline mb-3">
-                          <label className="form-label"></label>
-                          <input
-                            type="password"
-                            name="password"
-                            value={state.password}
-                            className="form-control"
-                            onChange={handleChange}
-                            placeholder="Password"
-                          />
-                          {validator.message(
-                            "password",
-                            state.password,
-                            "required"
-                          )}
-                        </div>
-
                         <div className="text-center">
                           <button
                             type="submit"
                             className="btn bg-gradient-primary w-100 my-4 mb-2"
                           >
-                            Sign in <span className="fa fa-key"></span>
+                            Reset <span className="fa fa-key"></span>
                           </button>
                         </div>
                         <p className="mt-4 text-sm text-center">
-                        <a
-                            href="/register"
-                            className="text-primary text-gradient font-weight-bold"
-                          >
-                            Sign up 
-                          </a> Or Start using &nbsp;
+                          Back To &nbsp;
                           <a
-                            href="/dashboard"
+                            href="/login"
                             className="text-primary text-gradient font-weight-bold"
                           >
-                            Guest Login
-                          </a>
-                        </p>
-                        
-                        <p className="mt-4 text-sm text-center">
-                          <a
-                            href="/password-reset"
-                            className="text-primary text-gradient font-weight-bold"
-                          >
-                            Reset Password
+                            Login
                           </a>
                         </p>
                       </form>
@@ -181,4 +148,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;

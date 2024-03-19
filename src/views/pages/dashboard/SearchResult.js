@@ -32,6 +32,10 @@ const SearchResult = ({ items, searchKey, category, date, price }) => {
 
   const priceFormatter = (product) => "$" + product.priceAfterDiscount;
 
+  const handleRowClick = (product) => {
+    navigate(`/product/${product.data._id}`);
+  };
+
   // handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -72,6 +76,7 @@ const SearchResult = ({ items, searchKey, category, date, price }) => {
                       <input
                         className="form-control mb-2"
                         type="number"
+                        placeholder="Price From"
                         min={1}
                         value={price.priceFrom}
                         onChange={(e) => price.setPriceFrom(e.target.value)}
@@ -80,6 +85,7 @@ const SearchResult = ({ items, searchKey, category, date, price }) => {
                       <input
                         className="form-control mb-2"
                         type="number"
+                        placeholder="Price To"
                         value={price.priceTo}
                         onChange={(e) => price.setPriceTo(e.target.value)}
                       />
@@ -109,6 +115,7 @@ const SearchResult = ({ items, searchKey, category, date, price }) => {
                         rows={15}
                         rowsPerPageOptions={[15, 30, 45]}
                         tableStyle={{ minWidth: "50rem" }}
+                        onRowClick={handleRowClick}
                       >
                         <Column body={productImage} header=""></Column>
                         <Column field="title" sortable header="Title"></Column>

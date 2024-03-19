@@ -11,6 +11,9 @@ const tokenSchema = new Schema({
     type: String,
     required: true,
   },
+  remark: {
+    type: String,
+  },
 });
 
 const Token = mongoose.model("Token", tokenSchema);
