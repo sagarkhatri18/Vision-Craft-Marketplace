@@ -77,7 +77,6 @@ const ChangePassword = () => {
               <Card.Header>Change Password</Card.Header>
               <Card.Body>
                 <Error errors={error} />
-
                 <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col className="pr-1" md="6">

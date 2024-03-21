@@ -14,5 +14,7 @@ router.get("/account/verify/:id/:token", accountController.verify);
 router.get("/user-detail/:userId/:token", accountController.findUserFromToken);
 router.post("/reset-password", accountController.resetPassword);
 router.post("/change-password", accountController.changePassword);
+router.get("/provinces", accountController.provinces);
+router.get("/provinces/cities/:provinceName", accountController.provinceCities);
 
 module.exports = router;

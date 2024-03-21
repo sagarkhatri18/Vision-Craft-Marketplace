@@ -86,6 +86,9 @@ const Header = () => {
                   <Dropdown.Item href="/change-password">
                     Change Password
                   </Dropdown.Item>
+                  <Dropdown.Item href="/my-profile">
+                    My Profile
+                  </Dropdown.Item>
                   <Dropdown.Item href="/login" onClick={() => Logout()}>
                     Logout
                   </Dropdown.Item>

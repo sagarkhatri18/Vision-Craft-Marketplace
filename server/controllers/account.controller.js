@@ -4,6 +4,7 @@ const { Token } = require("../model/token.model");
 const { cartItem } = require("../model/cartItem.model");
 const { tokenSign } = require("../services/helper");
 const { sendEmail, sendPasswordResetEmail } = require("../services/email");
+const { canadaCities } = require("../model/canadaCities.model");
 
 exports.login = async (req, res, next) => {
   try {
@@ -238,6 +239,8 @@ exports.changePassword = async (req, res, next) => {
           message: "Current password is incorrect",
         });
       }
+    } else {
+      await Token.findOneAndDelete({ token: req.body.token });
     }
 
     // Update user's password
@@ -251,6 +254,51 @@ exports.changePassword = async (req, res, next) => {
   } catch (error) {
     return res.status(400).json({
       message: "Failed to update the password",
+      error: error.message,
+    });
+  }
+};
+
+// fetch all the provinces from the database
+exports.provinces = async (req, res, next) => {
+  try {
+    const distinctProvinceIds = await canadaCities.distinct("provinceId");
+
+    // Fetch province documents corresponding to distinct province IDs
+    const provinces = await Promise.all(
+      distinctProvinceIds.map(async (provinceId) => {
+        return await canadaCities
+          .findOne({ provinceId })
+          .select("provinceId provinceName");
+      })
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: provinces,
+      message: "Data fetched successfully",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: "Failed to load the provinces",
+      error: error.message,
+    });
+  }
+};
+
+// fetch all the cities from the province
+exports.provinceCities = async (req, res, next) => {
+  try {
+    const provinceName = req.params.provinceName;
+    const cities = await canadaCities.find({ provinceName }).select('city');
+    return res.status(200).json({
+      success: true,
+      data: cities,
+      message: "Data fetched successfully",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: "Failed to load the cities",
       error: error.message,
     });
   }

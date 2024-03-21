@@ -19,20 +19,39 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    contact: {
+    country: {
+      type: String,
+    },
+    province: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    streetName: {
+      type: String,
+    },
+    suiteNumber: {
+      type: String,
+    },
+    postalCode: {
+      type: String,
+    },
+    contactNumber: {
       type: Number,
+      unique: true,
       //min: 10,
       //max: 10,
-    },
-    address: {
-      type: String,
-      unique: false,
     },
     role: {
       type: String,
       required: true,
     },
     verified: {
+      type: Boolean,
+      default: false,
+    },
+    profileCompletion: {
       type: Boolean,
       default: false,
     },

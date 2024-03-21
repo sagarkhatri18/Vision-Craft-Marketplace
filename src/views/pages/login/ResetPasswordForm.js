@@ -55,7 +55,7 @@ const ResetPasswordForm = () => {
       const formData = {
         userId: user._id,
         password: bcrypt.hashSync(password, "$2a$10$CwTycUXWue0Thq9StjUM0u"),
-        currentPassword: "",
+        token: params.token
       };
       changePassword(formData)
         .then((res) => {

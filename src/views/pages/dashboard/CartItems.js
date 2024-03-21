@@ -6,6 +6,7 @@ import { index } from "../../../services/Cart";
 import { decodeToken } from "react-jwt";
 import { toast } from "react-toastify";
 import { useCart } from "../../../context/CartContext";
+import { NavLink } from "react-router-dom";
 
 const AddToCart = () => {
   const getUserId = decodeToken(localStorage.getItem("token")).id;
@@ -239,9 +240,9 @@ const AddToCart = () => {
               <button type="button" className="btn btn-danger btn-md mr-2">
                 Go To Checkout
               </button>
-              <a href="index.html" className="btn btn-success btn-md">
+              <NavLink to={'/dashboard'} className="btn btn-success btn-md">
                 Continue Shopping
-              </a>
+              </NavLink>
             </div>
           </div>
         </div>

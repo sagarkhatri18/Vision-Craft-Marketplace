@@ -6,6 +6,9 @@ const Search = React.lazy(() => import("./views/pages/dashboard/Search"));
 const ChangePassword = React.lazy(() =>
   import("./views/pages/login/ChangePassword")
 );
+const MyProfile = React.lazy(() =>
+  import("./views/pages/user/MyProfile")
+);
 const Category = React.lazy(() => import("./views/pages/category/Category"));
 const AddCategory = React.lazy(() => import("./views/pages/category/Create"));
 const UpdateCategory = React.lazy(() =>
@@ -157,6 +160,14 @@ const routes = [
     sidebar: false,
     icon: "nc-icon nc-notes",
     element: ChangePassword,
+    access: Customer,
+  },
+  {
+    path: "/my-profile",
+    name: "My Profile",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: MyProfile,
     access: Customer,
   },
 ];

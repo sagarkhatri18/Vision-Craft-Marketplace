@@ -8,11 +8,15 @@ const categoryRoute = require("./routes/category.route");
 const productRoute = require("./routes/product.route");
 const cartRoute = require("./routes/cart.route");
 const connectDB = require("./services/db.connection");
+const seedData = require("./services/seeder");
 const { authenticateToken } = require("./services/helper");
 
 dotenv.config();
 //Connecting the Database
 connectDB();
+
+// seeding the data
+seedData()
 
 let allowCrossDomain = (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
