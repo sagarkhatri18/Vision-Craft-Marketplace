@@ -96,10 +96,15 @@ exports.update = async (req, res) => {
     firstName: reqParam.firstName,
     lastName: reqParam.lastName,
     email: reqParam.email,
-    contact: reqParam.contact,
-    address: reqParam.address,
-    role: reqParam.role,
+    province: reqParam.province,
+    city: reqParam.city,
+    streetName: reqParam.streetName,
+    suiteNumber: reqParam.suiteNumber,
+    postalCode: reqParam.postalCode,
+    contactNumber: reqParam.contactNumber,
     verified: reqParam.verified,
+    role: reqParam.role,
+    profileCompletion: true,
   };
 
   try {

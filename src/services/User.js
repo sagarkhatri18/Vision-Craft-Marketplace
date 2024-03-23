@@ -43,19 +43,23 @@ export const deleteUserFromId = async (id) => {
 };
 
 // update user
-export const update = async (id, data) => {
-  const updateDate = {
+export const update = async (data, id) => {
+  const updateData = {
     firstName: data.firstName,
     lastName: data.lastName,
     email: data.email,
-    contact: data.contact,
-    address: data.address,
-    role: data.role,
+    province: data.province,
+    city: data.city,
+    streetName: data.streetName,
+    suiteNumber: data.suiteNumber,
+    postalCode: data.postalCode,
+    contactNumber: data.contactNumber,
     verified: data.verified,
+    role: data.role,
   };
   return await axios.put(
     process.env.REACT_APP_API_URL + `user/${id}`,
-    updateDate,
+    updateData,
     config
   );
 };

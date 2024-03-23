@@ -2,7 +2,11 @@ import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Button, Card, Container, Row, Col, Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { getUserById } from "services/User";
-import { getProvinces, getCitiesFromProvinceName } from "services/Services";
+import {
+  getProvinces,
+  getCitiesFromProvinceName,
+} from "../../../services/Services";
+import { update } from "../../../services/User";
 import { decodeToken } from "react-jwt";
 import { toast } from "react-toastify";
 import SimpleReactValidator from "simple-react-validator";
@@ -12,12 +16,23 @@ import { Error, errorResponse } from "../../../helpers/Error";
 const MyProfile = () => {
   const dispatch = useDispatch();
   const getUserId = decodeToken(localStorage.getItem("token")).id;
-
-  const [user, setUser] = useState([]);
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
   const [error, setError] = useState("");
-  const [state, setState] = useState([]);
+  const [state, setState] = useState({
+    _id: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    province: "",
+    city: "",
+    streetName: "",
+    suiteNumber: "",
+    postalCode: "",
+    contactNumber: "",
+    verified: "",
+    role: "",
+  });
 
   // Validator Imports
   let validator = useRef(
@@ -50,7 +65,7 @@ const MyProfile = () => {
     await getUserById(getUserId)
       .then((res) => {
         dispatch(hideLoader());
-        setUser(res.data.data);
+        setState(res.data.data);
       })
       .catch((error) => {
         dispatch(hideLoader());
@@ -113,9 +128,18 @@ const MyProfile = () => {
 
     if (validator.allValid()) {
       const formData = state;
-      formData._id = user._id
 
-      debugger;
+      await update(formData, state._id)
+        .then((res) => {
+          dispatch(hideLoader());
+          toast.success(res.data.message);
+          fetchUserDetail();
+          fetchProvinces();
+        })
+        .catch((error) => {
+          dispatch(hideLoader());
+          setError(errorResponse(error));
+        });
     } else {
       dispatch(hideLoader());
       validator.showMessages();
@@ -127,6 +151,13 @@ const MyProfile = () => {
     fetchUserDetail();
     fetchProvinces();
   }, [fetchUserDetail, fetchProvinces]);
+
+  // Fetch cities for the selected province when provinces are fetched
+  useEffect(() => {
+    if (state.province) {
+      fetchProvinceCities(state.province);
+    }
+  }, [state.province, fetchProvinceCities]);
   return (
     <>
       <Container fluid>
@@ -146,7 +177,7 @@ const MyProfile = () => {
                           name="firstName"
                           type="text"
                           disabled={true}
-                          value={user.firstName}
+                          value={state.firstName}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -157,7 +188,7 @@ const MyProfile = () => {
                           placeholder="First Name"
                           name="firstName"
                           disabled={true}
-                          value={user.lastName}
+                          value={state.lastName}
                           type="text"
                         ></Form.Control>
                       </Form.Group>
@@ -169,7 +200,7 @@ const MyProfile = () => {
                           placeholder="Email"
                           name="email"
                           disabled={true}
-                          value={user.email}
+                          value={state.email}
                           type="text"
                         ></Form.Control>
                       </Form.Group>
@@ -203,6 +234,7 @@ const MyProfile = () => {
                             </option>
                           ))}
                         </select>
+
                         {validator.message(
                           "province",
                           state.province,
@@ -226,6 +258,7 @@ const MyProfile = () => {
                             </option>
                           ))}
                         </select>
+
                         {validator.message("city", state.city, "required")}
                       </Form.Group>
                     </Col>

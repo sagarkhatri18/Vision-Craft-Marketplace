@@ -6,10 +6,10 @@
     "@reduxjs/toolkit": "^2.2.1",
     "alertifyjs": "^1.13.1",
     "axios": "^1.6.7",
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "bootstrap": "4.6.0",
-    "gulp": "4.0.2",
-    "gulp-append-prepend": "1.0.9",
+    "crypto-browserify": "^3.12.0",
     "primeflex": "^3.3.1",
     "primeicons": "^6.0.1",
     "primereact": "^10.5.1",
@@ -24,13 +24,14 @@
     "react-responsive-carousel": "^3.2.23",
     "react-router": "^6.21.3",
     "react-router-dom": "^6.14.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "react-select": "^5.8.0",
     "react-toastify": "^10.0.4",
     "reactstrap": "^8.8.1",
     "redux": "^5.0.1",
     "sass": "1.53.0",
     "simple-react-validator": "^1.6.2",
+    "stream": "^0.0.2",
     "styled-components": "^6.1.8"
   },
   "overrides": {
@@ -61,5 +62,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  },
+  "browser": {
+    "crypto": false
   }
 }

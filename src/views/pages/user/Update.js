@@ -7,24 +7,59 @@ import { Error, errorResponse } from "../../../helpers/Error";
 import SimpleReactValidator from "simple-react-validator";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import {
+  getProvinces,
+  getCitiesFromProvinceName,
+} from "../../../services/Services";
 import { showLoader, hideLoader } from "../../../actions/Action";
 
 const Update = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [, forceUpdate] = useState();
 
+  const [provinces, setProvinces] = useState([]);
+  const [cities, setCities] = useState([]);
   const [state, setState] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    contact: "",
-    address: "",
+    province: "",
+    city: "",
+    streetName: "",
+    suiteNumber: "",
+    postalCode: "",
+    contactNumber: "",
     verified: "",
     role: "",
   });
   const [error, setError] = useState("");
+
+  // Validator Imports
+  let validator = useRef(
+    new SimpleReactValidator({
+      validators: {
+        postalCode: {
+          required: true,
+          message: "Postal code is not in valid format.",
+          rule: (val, params, validator) => {
+            return validator.helpers.testRegex(
+              val,
+              /^[A-Za-z]\d[A-Za-z] ?\d[A-Za-z]\d$/
+            );
+          },
+        },
+        contactNumber: {
+          required: true,
+          message: "Contact number must exactly be in 10 digits.",
+          rule: (val, params, validator) => {
+            return validator.helpers.testRegex(val, /^\d{10}$/);
+          },
+        },
+      },
+    })
+  ).current;
+  const [, forceUpdate] = useState();
 
   const findUserById = useCallback(() => {
     dispatch(showLoader());
@@ -40,10 +75,52 @@ const Update = () => {
       });
   }, [params.id]);
 
-  const handleChange = (e) => {
+  const fetchProvinces = useCallback(async () => {
+    dispatch(showLoader());
+    await getProvinces()
+      .then((res) => {
+        dispatch(hideLoader());
+        setProvinces(res.data.data);
+      })
+      .catch((error) => {
+        dispatch(hideLoader());
+        setError(errorResponse(error));
+      });
+  }, []);
+
+  // fetch cities on the basis of province id
+  const fetchProvinceCities = useCallback(async (provinceName) => {
+    dispatch(showLoader());
+    await getCitiesFromProvinceName(provinceName)
+      .then((res) => {
+        dispatch(hideLoader());
+        setCities(res.data.data);
+      })
+      .catch((error) => {
+        dispatch(hideLoader());
+        setError(errorResponse(error));
+      });
+  }, []);
+
+  const handleProvinceChange = (e) => {
     setState((prevState) => ({
       ...prevState,
-      [e.target.name]: e.target.value,
+      province: e.target.value,
+    }));
+    // Fetch cities data based on the selected province
+    setCities([]);
+    setState((prevState) => ({
+      ...prevState,
+      city: "",
+    }));
+    if (e.target.value != "") fetchProvinceCities(e.target.value);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setState((prevState) => ({
+      ...prevState,
+      [name]: name === "verified" ? value === "true" : value, // Convert 'true'/'false' strings to boolean
     }));
   };
 
@@ -54,14 +131,18 @@ const Update = () => {
       firstName: state.firstName,
       lastName: state.lastName,
       email: state.email,
-      contact: state.contact,
-      address: state.address,
+      province: state.province,
+      city: state.city,
+      streetName: state.streetName,
+      suiteNumber: state.suiteNumber,
+      postalCode: state.postalCode,
+      contactNumber: state.contactNumber,
       verified: Boolean(state.verified),
       role: state.role,
     };
 
     if (validator.allValid()) {
-      update(params.id, formData)
+      update(formData, params.id)
         .then((data) => {
           toast.success(data.data.message);
           navigate("/users");
@@ -77,28 +158,17 @@ const Update = () => {
     }
   };
 
-  // Validator Imports
-  let validator = useRef(
-    new SimpleReactValidator({
-      validators: {
-        password: {
-          required: true,
-          message:
-            "Password must be at least 8 characters, contain at least one letter and at least one digit.",
-          rule: (val, params, validator) => {
-            return validator.helpers.testRegex(
-              val,
-              /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/
-            );
-          },
-        },
-      },
-    })
-  ).current;
-
   useEffect(() => {
     findUserById();
-  }, [findUserById]);
+    fetchProvinces();
+  }, [findUserById, fetchProvinces]);
+
+  // Fetch cities for the selected province when provinces are fetched
+  useEffect(() => {
+    if (state.province) {
+      fetchProvinceCities(state.province);
+    }
+  }, [state.province, fetchProvinceCities]);
 
   return (
     <>
@@ -111,9 +181,9 @@ const Update = () => {
               <Card.Body>
                 <Form onSubmit={handleSubmit}>
                   <Row>
-                    <Col className="pr-1" md="6">
+                    <Col className="pr-1" md="4">
                       <Form.Group>
-                        <label>First Name</label>
+                        <label>First Name *</label>
                         <Form.Control
                           placeholder="First Name"
                           name="firstName"
@@ -128,9 +198,9 @@ const Update = () => {
                         "required|alpha"
                       )}
                     </Col>
-                    <Col className="px-1" md="6">
+                    <Col className="px-1" md="4">
                       <Form.Group>
-                        <label>Last Name</label>
+                        <label>Last Name *</label>
                         <Form.Control
                           placeholder="Last Name"
                           name="lastName"
@@ -145,11 +215,9 @@ const Update = () => {
                         "required|alpha"
                       )}
                     </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-1" md="6">
+                    <Col className="pr-1" md="4">
                       <Form.Group>
-                        <label>Email</label>
+                        <label>Email *</label>
                         <Form.Control
                           placeholder="Email"
                           name="email"
@@ -164,35 +232,133 @@ const Update = () => {
                         "required|email"
                       )}
                     </Col>
-                    <Col className="pr-1" md="6">
+                  </Row>
+                  <Row>
+                    <Col className="pr-1" md="4">
                       <Form.Group>
-                        <label>Contact</label>
+                        <label>Country</label>
                         <Form.Control
-                          placeholder="Contact"
-                          name="contact"
-                          onChange={handleChange}
-                          type="number"
-                          value={state.contact}
+                          name="country"
+                          type="text"
+                          disabled={true}
+                          value={`Canada`}
                         ></Form.Control>
                       </Form.Group>
-                      {validator.message("contact", state.contact, "required")}
+                    </Col>
+                    <Col className="pr-1" md="4">
+                      <Form.Group>
+                        <label>Province *</label>
+                        <select
+                          className="form-control"
+                          name="province"
+                          value={state.province || ""}
+                          onChange={handleProvinceChange}
+                        >
+                          <option value="">Select province</option>
+                          {provinces.map((province, index) => (
+                            <option key={index} value={province.provinceName}>
+                              {province.provinceName}
+                            </option>
+                          ))}
+                        </select>
+
+                        {validator.message(
+                          "province",
+                          state.province,
+                          "required"
+                        )}
+                      </Form.Group>
+                    </Col>
+                    <Col className="pr-1" md="4">
+                      <Form.Group>
+                        <label>City *</label>
+                        <select
+                          className="form-control"
+                          name="city"
+                          value={state.city || ""}
+                          onChange={handleChange}
+                        >
+                          <option value="">Select city</option>
+                          {cities.map((item, index) => (
+                            <option key={index} value={item.city}>
+                              {item.city}
+                            </option>
+                          ))}
+                        </select>
+
+                        {validator.message("city", state.city, "required")}
+                      </Form.Group>
                     </Col>
                   </Row>
                   <Row>
-                    <Col className="pr-1" md="6">
+                    <Col className="pr-1" md="4">
                       <Form.Group>
-                        <label>Address</label>
+                        <label>Street Name *</label>
                         <Form.Control
-                          placeholder="Address"
-                          name="address"
-                          onChange={handleChange}
+                          name="streetName"
+                          placeholder="Street Name"
                           type="text"
-                          value={state.address}
+                          value={state.streetName}
+                          onChange={handleChange}
+                        ></Form.Control>
+                        {validator.message(
+                          "streetName",
+                          state.streetName,
+                          "required"
+                        )}
+                      </Form.Group>
+                    </Col>
+                    <Col className="pr-1" md="4">
+                      <Form.Group>
+                        <label>Suite Number</label>
+                        <Form.Control
+                          name="suiteNumber"
+                          placeholder="Suite Number"
+                          type="text"
+                          value={state.suiteNumber}
+                          onChange={handleChange}
                         ></Form.Control>
                       </Form.Group>
-                      {validator.message("address", state.address, "required")}
                     </Col>
-                    <Col className="pr-1" md="6">
+                    <Col className="pr-1" md="4">
+                      <Form.Group>
+                        <label>Postal Code *</label>
+                        <Form.Control
+                          name="postalCode"
+                          placeholder="Postal Code"
+                          type="text"
+                          disabled={!state.city}
+                          value={state.postalCode}
+                          onChange={handleChange}
+                        ></Form.Control>
+                        {validator.message(
+                          "postal code",
+                          state.postalCode,
+                          "required|postalCode"
+                        )}
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="pr-1" md="4">
+                      <Form.Group>
+                        <label>Contact Number *</label>
+                        <Form.Control
+                          name="contactNumber"
+                          placeholder="Contact Number"
+                          type="number"
+                          value={state.contactNumber}
+                          onChange={handleChange}
+                        ></Form.Control>
+                        {validator.message(
+                          "contact number",
+                          state.contactNumber,
+                          "required|contactNumber"
+                        )}
+                      </Form.Group>
+                    </Col>
+
+                    <Col className="pr-1" md="4">
                       <Form.Group>
                         <label>Role</label>
                         <Form.Control
@@ -204,9 +370,7 @@ const Update = () => {
                         ></Form.Control>
                       </Form.Group>
                     </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-1" md="6">
+                    <Col className="pr-1" md="4">
                       <Form.Group>
                         <label>Verified Status</label>
                         <br></br>
