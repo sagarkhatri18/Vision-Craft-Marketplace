@@ -177,7 +177,7 @@ const User = () => {
             </DataTable>
           </div>
         </Row>
-        <Modal isOpen={modalShow} toggle={closeModal}>
+        <Modal isOpen={modalShow} toggle={closeModal} size="lg">
           <ModalHeader toggle={closeModal} close={closeBtn}>
             User Detail
           </ModalHeader>

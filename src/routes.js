@@ -28,6 +28,10 @@ const User = React.lazy(() => import("./views/pages/user/User"));
 const AddUser = React.lazy(() => import("./views/pages/user/Create"));
 const UpdateUser = React.lazy(() => import("./views/pages/user/Update"));
 
+// payment
+const PaymentSuccess = React.lazy(() => import("./views/pages/payment/Success"));
+const PaymentFail = React.lazy(() => import("./views/pages/payment/Fail"));
+
 const All = ["customer", "admin", "all"];
 const Admin = ["admin"];
 const Customer = ["customer"];
@@ -168,6 +172,22 @@ const routes = [
     sidebar: false,
     icon: "nc-icon nc-notes",
     element: MyProfile,
+    access: Customer,
+  },
+  {
+    path: "/payment-success/:orderId",
+    name: "Payment Success",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: PaymentSuccess,
+    access: Customer,
+  },
+  {
+    path: "/payment-fail",
+    name: "Payment Fail",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: PaymentFail,
     access: Customer,
   },
 ];

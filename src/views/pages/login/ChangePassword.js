@@ -4,7 +4,7 @@ import { changePassword } from "services/Services";
 import { showLoader, hideLoader } from "../../../actions/Action";
 import SimpleReactValidator from "simple-react-validator";
 import { useDispatch } from "react-redux";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs-react";
 import { decodeToken } from "react-jwt";
 import { toast } from "react-toastify";
 import { Error, errorResponse } from "../../../helpers/Error";
@@ -47,15 +47,19 @@ const ChangePassword = () => {
       const formData = {
         userId: getUserId,
         currentPassword,
-        password: bcrypt.hashSync(password, "$2a$10$CwTycUXWue0Thq9StjUM0u"),
+        // password: bcrypt.hashSync(password, "$2a$10$CwTycUXWue0Thq9StjUM0u"),
       };
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      formData.password = hashedPassword;
+
       await changePassword(formData)
         .then((res) => {
           dispatch(hideLoader());
           toast.success(res.data.message);
 
           localStorage.clear();
-          navigate('/login')
+          navigate("/login");
         })
         .catch((error) => {
           dispatch(hideLoader());

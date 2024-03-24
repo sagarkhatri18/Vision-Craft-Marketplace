@@ -1,5 +1,6 @@
 import React from "react";
 import { Tag } from "primereact/tag";
+import {createAddressString} from "../../../helpers/helper"
 
 const UserDetails = (props) => {
   const userData = props.data;
@@ -23,22 +24,21 @@ const UserDetails = (props) => {
             <th>Email: </th>
             <td>{userData.email}</td>
           </tr>
-          {userData.contact != null ? (
-            <tr>
-              <th>Contact: </th>
-              <td>{userData.contact}</td>
-            </tr>
+          {userData.profileCompletion ? (
+            <>
+              <tr>
+                <th>Contact: </th>
+                <td>{userData.contactNumber}</td>
+              </tr>
+              <tr>
+                <th>Address: </th>
+                <td>{createAddressString(userData)}</td>
+              </tr>
+            </>
           ) : (
             ""
           )}
-          {userData.address != null ? (
-            <tr>
-              <th>Address: </th>
-              <td>{userData.address}</td>
-            </tr>
-          ) : (
-            ""
-          )}
+
           <tr>
             <th>Role: </th>
             <td>{userData.role}</td>

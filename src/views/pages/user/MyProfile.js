@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import SimpleReactValidator from "simple-react-validator";
 import { showLoader, hideLoader } from "../../../actions/Action";
 import { Error, errorResponse } from "../../../helpers/Error";
+import { updateTokenInLocalStorage } from "../../../helpers/helper";
 
 const MyProfile = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const MyProfile = () => {
     lastName: "",
     email: "",
     province: "",
+    country: "Canada",
     city: "",
     streetName: "",
     suiteNumber: "",
@@ -128,11 +130,11 @@ const MyProfile = () => {
 
     if (validator.allValid()) {
       const formData = state;
-
       await update(formData, state._id)
         .then((res) => {
           dispatch(hideLoader());
           toast.success(res.data.message);
+          localStorage.setItem("user", JSON.stringify(res.data.user));
           fetchUserDetail();
           fetchProvinces();
         })
@@ -214,7 +216,7 @@ const MyProfile = () => {
                           name="country"
                           type="text"
                           disabled={true}
-                          value={`Canada`}
+                          value={state.country}
                         ></Form.Control>
                       </Form.Group>
                     </Col>

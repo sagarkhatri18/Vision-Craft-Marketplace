@@ -1,3 +1,4 @@
+import React from "react";
 import AvailableCategory from "./AvailableCategory";
 import LatestProduct from "./LatestProduct";
 

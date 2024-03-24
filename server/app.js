@@ -7,6 +7,7 @@ const accountRoute = require("./routes/account.route");
 const categoryRoute = require("./routes/category.route");
 const productRoute = require("./routes/product.route");
 const cartRoute = require("./routes/cart.route");
+const paymentRoute = require("./routes/payment.route");
 const connectDB = require("./services/db.connection");
 const seedData = require("./services/seeder");
 const { authenticateToken } = require("./services/helper");
@@ -46,6 +47,7 @@ app.use("/api/user/", authenticateToken, userRoute);
 app.use("/api/category/", categoryRoute);
 app.use("/api/product/", productRoute);
 app.use("/api/cart/", cartRoute);
+app.use("/api/payment/", paymentRoute);
 
 app.listen(process.env.APP_PORT, () => {
   console.log("Started application on port %d", process.env.APP_PORT);

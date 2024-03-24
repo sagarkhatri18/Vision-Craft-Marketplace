@@ -1,31 +1,40 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showLoader, hideLoader } from "../../../actions/Action";
 import { index } from "../../../services/Cart";
-import { decodeToken } from "react-jwt";
+import { checkoutSession } from "../../../services/Payment";
 import { toast } from "react-toastify";
 import { useCart } from "../../../context/CartContext";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
+import placeHolderImage from "../../../assets/img/placeholderImage.png";
+import { loadStripe } from "@stripe/stripe-js";
+import { createAddressString } from "../../../helpers/helper";
 
 const AddToCart = () => {
-  const getUserId = decodeToken(localStorage.getItem("token")).id;
+  const userDetails = JSON.parse(localStorage.getItem("user"))
   const dispatch = useDispatch();
   const { updateTheCart, deleteTheCart } = useCart();
   const [cartItems, setCartItems] = useState([]);
 
   const fetchCartItems = useCallback(() => {
-    dispatch(showLoader());
-    index(getUserId)
-      .then((data) => {
-        dispatch(hideLoader());
-        setCartItems(data.data);
-      })
-      .catch((error) => {
-        dispatch(hideLoader());
-        toast.error("Error occured while fetching data");
-      });
-  }, [getUserId]);
+    if (userDetails && userDetails._id) {
+      dispatch(showLoader());
+      index(userDetails._id)
+        .then((data) => {
+          dispatch(hideLoader());
+          setCartItems(data.data);
+        })
+        .catch((error) => {
+          dispatch(hideLoader());
+          toast.error("Error occurred while fetching data");
+        });
+    } else {
+      toast.error("User details not available. Please log in again.");
+      setCartItems([]);
+    }
+  }, []);
 
   useEffect(() => {
     fetchCartItems();
@@ -118,14 +127,85 @@ const AddToCart = () => {
   let totalPrice = parseFloat(subtotal) + parseFloat(hst) + shippingCost;
   totalPrice = totalPrice.toFixed(2);
 
+  // fetch current user location
+  const fetchLocation = async () => {
+    try {
+      const response = await axios.get("https://ipinfo.io/json");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching location:", error);
+    }
+  };
+
+  // make stripe payment
+  const makePayment = async () => {
+    if (!Boolean(userDetails.profileCompletion)) {
+      toast.error(
+        `Your profile is not completed. Please first complete your profile first`
+      );
+      return false;
+    }
+
+    try {
+      dispatch(showLoader());
+      const stripe = await loadStripe(
+        process.env.REACT_APP_STRIP_PUBLISHABLE_KEY
+      );
+
+      // Fetch user's location
+      const locationData = await fetchLocation();
+
+      const products = cartItems.map((item, index) => ({
+        category: item.productId.categoryId.name,
+        id: item.productId._id,
+        name: item.productId.title,
+        slug: item.productId.slug,
+        price: item.productId.priceAfterDiscount,
+        quantity: item.quantity,
+        image: `${process.env.REACT_APP_API_BASE_URL}/${item.productId.filePath}/${item.productId.image}`,
+      }));
+
+      // order details
+      const productOrder = {
+        orderedThrough: "cart_items",
+        orderedUserDetails: locationData,
+        total: totalPrice,
+        subTotal: subtotal,
+        shippingCharge: shippingCost,
+        hstCharge: hst,
+        customerName: userDetails.firstName + " " + userDetails.lastName,
+        customerContact: userDetails.contactNumber,
+        customerEmail: userDetails.email,
+        customerAddress: createAddressString(userDetails),
+        userId: userDetails._id,
+      };
+
+      dispatch(showLoader());
+      const session = await checkoutSession({
+        products,
+        shippingCost,
+        hst,
+        productOrder,
+        baseURL: window.location.origin,
+      });
+      dispatch(hideLoader());
+
+      // Redirect to Stripe checkout page
+      await stripe.redirectToCheckout({
+        sessionId: session.data.id,
+      });
+    } catch (error) {
+      dispatch(hideLoader());
+      toast.error("Error occurred during payment");
+    }
+  };
+
   const cartDetails = (
     <>
       <table className="table">
         <thead>
           <tr>
-            <th scope="col" width="5%">
-              S.N
-            </th>
+            <th scope="col" width="5%"></th>
             <th scope="col" width="10%">
               Category
             </th>
@@ -147,7 +227,17 @@ const AddToCart = () => {
           {cartItems.map((item, index) => {
             return (
               <tr key={index}>
-                <td>{index + 1}.</td>
+                <td>
+                  <img
+                    className="img-fluid"
+                    src={`${process.env.REACT_APP_API_BASE_URL}/${item.productId.filePath}/${item.productId.image}`}
+                    alt={item.productId.title}
+                    title={item.productId.title}
+                    onError={(e) => {
+                      e.target.src = placeHolderImage;
+                    }}
+                  />
+                </td>
                 <td>{item.productId.categoryId.name}</td>
                 <td>{item.productId.title}</td>
                 <td>
@@ -162,6 +252,7 @@ const AddToCart = () => {
                       />
                       <input
                         type="number"
+                        style={{ border: "unset" }}
                         step={1}
                         min={1}
                         max={item.productId.availableQuantity}
@@ -237,10 +328,14 @@ const AddToCart = () => {
               </div>
             </div>
             <div className="d-flex align-items-center">
-              <button type="button" className="btn btn-danger btn-md mr-2">
+              <button
+                type="button"
+                className="btn btn-danger btn-md mr-2"
+                onClick={makePayment}
+              >
                 Go To Checkout
               </button>
-              <NavLink to={'/dashboard'} className="btn btn-success btn-md">
+              <NavLink to={"/dashboard"} className="btn btn-success btn-md">
                 Continue Shopping
               </NavLink>
             </div>

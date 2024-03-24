@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Nav } from "react-bootstrap";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs-react";
 import { register } from "../../../../src/services/Services";
 import "../../../assets/css/login/material-dashboard.min.css";
 import { errorResponse } from "../../../helpers/responseHolder";
@@ -54,24 +54,30 @@ const Register = () => {
   };
 
   // handle the form submission part
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     dispatch(showLoader());
 
     if (validator.allValid()) {
       const formData = {
+        country: null,
+        province: null,
+        city: null,
+        streetName: null,
+        suiteNumber: null,
+        postalCode: null,
+        contactNumber: null,
+        role: "customer",
+        verified: false,
         firstName: state.firstName,
         lastName: state.lastName,
         email: state.email,
-        password: bcrypt.hashSync(
-          state.password,
-          "$2a$10$CwTycUXWue0Thq9StjUM0u"
-        ),
-        contact: null,
-        address: null,
-        role: "customer",
-        verified: false,
       };
+
+      // hash the password using bcrypt
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(state.password, saltRounds);
+      formData.password = hashedPassword;
 
       register(formData)
         .then((res) => {

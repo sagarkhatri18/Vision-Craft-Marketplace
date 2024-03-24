@@ -10,15 +10,35 @@ export const login = async (email, password) => {
 
 //handle the register API
 export const register = async (data) => {
+  const {
+    country,
+    province,
+    city,
+    streetName,
+    suiteNumber,
+    postalCode,
+    contactNumber,
+    role,
+    verified,
+    firstName,
+    lastName,
+    email,
+    password,
+  } = data;
   return axios.post(process.env.REACT_APP_API_URL + `register`, {
-    firstName: data.firstName,
-    lastName: data.lastName,
-    email: data.email,
-    password: data.password,
-    contact: data.contact,
-    address: data.address,
-    role: data.role,
-    verified: data.verified,
+    country,
+    province,
+    city,
+    streetName,
+    suiteNumber,
+    postalCode,
+    contactNumber,
+    role,
+    verified,
+    firstName,
+    lastName,
+    email,
+    password,
   });
 };
 
@@ -53,7 +73,9 @@ export const getProvinces = async () => {
 
 // fetch list of provinces of canada
 export const getCitiesFromProvinceName = async (provinceName) => {
-  return axios.get(process.env.REACT_APP_API_URL + `provinces/cities/${provinceName}`);
+  return axios.get(
+    process.env.REACT_APP_API_URL + `provinces/cities/${provinceName}`
+  );
 };
 
 export const Logout = () => {

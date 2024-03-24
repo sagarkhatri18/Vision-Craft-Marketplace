@@ -47,11 +47,14 @@ exports.login = async (req, res, next) => {
           return total + parseInt(item.quantity);
         }, 0);
 
+        // Return response without password
+        const userWithoutPassword = { ...user._doc };
+        delete userWithoutPassword.password;
+
         return res.status(200).json({
           message: "User successfully Logged in",
           success: true,
-          user: user._id,
-          role: user.role,
+          user: userWithoutPassword,
           token: token,
           cartQuantity: cartQuantityCounter,
         });
@@ -75,14 +78,19 @@ exports.register = async (req, res, next) => {
     const reqParam = req.body;
 
     let userData = await User.create({
+      country: reqParam.country,
+      province: reqParam.province,
+      city: reqParam.city,
+      streetName: reqParam.streetName,
+      suiteNumber: reqParam.suiteNumber,
+      postalCode: reqParam.postalCode,
+      contactNumber: reqParam.contactNumber,
+      role: reqParam.role,
+      verified: reqParam.verified,
       firstName: reqParam.firstName,
       lastName: reqParam.lastName,
       email: reqParam.email,
       password: reqParam.password,
-      contact: reqParam.contact,
-      address: reqParam.address,
-      role: reqParam.role,
-      verified: reqParam.verified,
     })
       .then(async (data) => {
         // save in the token table
@@ -290,7 +298,7 @@ exports.provinces = async (req, res, next) => {
 exports.provinceCities = async (req, res, next) => {
   try {
     const provinceName = req.params.provinceName;
-    const cities = await canadaCities.find({ provinceName }).select('city');
+    const cities = await canadaCities.find({ provinceName }).select("city");
     return res.status(200).json({
       success: true,
       data: cities,

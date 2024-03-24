@@ -12,6 +12,7 @@ import {
   getCitiesFromProvinceName,
 } from "../../../services/Services";
 import { showLoader, hideLoader } from "../../../actions/Action";
+import { userDetails } from "helpers/helper";
 
 const Update = () => {
   const params = useParams();
@@ -21,6 +22,7 @@ const Update = () => {
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
   const [state, setState] = useState({
+    _id: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -28,6 +30,7 @@ const Update = () => {
     city: "",
     streetName: "",
     suiteNumber: "",
+    country: "Canada",
     postalCode: "",
     contactNumber: "",
     verified: "",
@@ -241,7 +244,7 @@ const Update = () => {
                           name="country"
                           type="text"
                           disabled={true}
-                          value={`Canada`}
+                          value={state.country}
                         ></Form.Control>
                       </Form.Group>
                     </Col>

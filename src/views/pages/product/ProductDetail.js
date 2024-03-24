@@ -13,12 +13,19 @@ import { getAllProductsFromCategoryId } from "../../../services/Product";
 import { NavLink } from "react-router-dom";
 import { Error, errorResponse } from "../../../helpers/Error";
 import { useCart } from "../../../context/CartContext";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import ProductReview from "./ProductReview";
+import { loggedInRole } from "../../../helpers/IsLoggedIn";
 
 const ProductDetail = () => {
+  const userDetails = JSON.parse(localStorage.getItem("user"));
+
   const params = useParams();
   const dispatch = useDispatch();
   const { addToCart } = useCart();
+  const currentRole = loggedInRole();
 
+  const [modalShow, setModalShow] = useState(false);
   const [error, setError] = useState("");
   const [product, setProduct] = useState(null);
   const [moreProducts, setMoreProducts] = useState([]);
@@ -97,6 +104,29 @@ const ProductDetail = () => {
   const addToCartSubmit = (e) => {
     e.preventDefault();
     addToCart({ productId: params.id, quantity: productCount });
+  };
+
+  // close modal for uploaded files list
+  const closeModal = () => setModalShow(false);
+
+  const closeBtn = (
+    <button className="close" onClick={closeModal}>
+      &times;
+    </button>
+  );
+
+  // buy now
+  const buyNow = (product) => {
+    if (currentRole == "customer") {
+      if (Boolean(userDetails.profileCompletion)) {
+        setModalShow(true);
+      } else {
+        toast.error(
+          `Your profile is not completed. Please first complete your profile first`
+        );
+      }
+    }
+    if (currentRole == "all") setModalShow(true);
   };
 
   useEffect(() => {
@@ -242,7 +272,10 @@ const ProductDetail = () => {
                     >
                       Add to Cart
                     </button>
-                    <button className="btn btn-warning btn-long buy">
+                    <button
+                      className="btn btn-warning btn-long buy"
+                      onClick={() => buyNow(product)}
+                    >
                       Buy it Now
                     </button>
                   </div>
@@ -319,6 +352,12 @@ const ProductDetail = () => {
             </div>
           </Col>
         </Row>
+        <Modal isOpen={modalShow} toggle={closeModal} size="lg">
+          <ModalHeader toggle={closeModal} close={closeBtn}></ModalHeader>
+          <ModalBody>
+            <ProductReview product={product} productCount={productCount} />
+          </ModalBody>
+        </Modal>
       </Container>
     </>
   ) : (

@@ -39,7 +39,7 @@ const Login = () => {
 
     if (validator.allValid()) {
       const email = state.email;
-      const password = state.password
+      const password = state.password;
 
       login(email, password)
         .then((res) => {
@@ -47,8 +47,8 @@ const Login = () => {
 
           if (response.success) {
             dispatch(hideLoader());
-            const token = response.token;
-            localStorage.setItem("token", token);
+            localStorage.setItem("token", response.token);
+            localStorage.setItem("user", JSON.stringify(response.user));
             localStorage.setItem("cartQuantity", response.cartQuantity);
             navigate("/dashboard");
           } else {
@@ -144,12 +144,13 @@ const Login = () => {
                           </button>
                         </div>
                         <p className="mt-4 text-sm text-center">
-                        <a
+                          <a
                             href="/register"
                             className="text-primary text-gradient font-weight-bold"
                           >
-                            Sign up 
-                          </a> Or Start using &nbsp;
+                            Sign up
+                          </a>{" "}
+                          Or Start using &nbsp;
                           <a
                             href="/dashboard"
                             className="text-primary text-gradient font-weight-bold"
@@ -157,7 +158,7 @@ const Login = () => {
                             Guest Login
                           </a>
                         </p>
-                        
+
                         <p className="mt-4 text-sm text-center">
                           <a
                             href="/password-reset"

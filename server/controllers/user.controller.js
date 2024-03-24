@@ -1,4 +1,5 @@
 const { User } = require("../model/user.model");
+const { tokenSign } = require("../services/helper");
 
 // list all the users
 exports.index = async (req, res) => {
@@ -67,11 +68,17 @@ exports.add = async (req, res) => {
     firstName: reqParam.firstName,
     lastName: reqParam.lastName,
     email: reqParam.email,
-    password: reqParam.password,
-    contact: reqParam.contact,
-    address: reqParam.address,
-    role: reqParam.role,
+    province: reqParam.province,
+    city: reqParam.city,
+    country: reqParam.country,
+    streetName: reqParam.streetName,
+    suiteNumber: reqParam.suiteNumber,
+    postalCode: reqParam.postalCode,
+    contactNumber: reqParam.contactNumber,
     verified: reqParam.verified,
+    role: reqParam.role,
+    profileCompletion: false,
+    password: reqParam.password,
   })
     .then((data) => {
       return res.status(200).json({
@@ -98,6 +105,7 @@ exports.update = async (req, res) => {
     email: reqParam.email,
     province: reqParam.province,
     city: reqParam.city,
+    country: reqParam.country,
     streetName: reqParam.streetName,
     suiteNumber: reqParam.suiteNumber,
     postalCode: reqParam.postalCode,
@@ -108,24 +116,30 @@ exports.update = async (req, res) => {
   };
 
   try {
-    await User.findOneAndUpdate({ _id: _id }, updateData)
-      .exec()
-      .then((user) => {
-        return res.status(200).json({
-          success: true,
-          message: "User has been successfully updated",
-        });
-      })
-      .catch((err) => {
-        return res.status(500).send({
-          success: false,
-          message: "Failed to update the selected user",
-        });
+    const user = await User.findOneAndUpdate({ _id: _id }, updateData, {
+      new: true, // Return the updated user object
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
       });
+    }
+
+    // Return response without password
+    const userWithoutPassword = { ...user._doc };
+    delete userWithoutPassword.password;
+
+    return res.status(200).json({
+      success: true,
+      user: userWithoutPassword,
+      message: "User has been successfully updated",
+    });
   } catch (error) {
-    return res.status(500).send({
+    return res.status(500).json({
       success: false,
-      message: "Something went Wrong",
+      message: "Failed to update the selected user",
     });
   }
 };

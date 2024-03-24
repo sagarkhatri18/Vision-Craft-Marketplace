@@ -39,9 +39,6 @@ const userSchema = new mongoose.Schema(
     },
     contactNumber: {
       type: Number,
-      unique: true,
-      //min: 10,
-      //max: 10,
     },
     role: {
       type: String,

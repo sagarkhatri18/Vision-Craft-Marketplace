@@ -5,7 +5,7 @@ import {
   findUserFromToken,
 } from "../../../../src/services/Services";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs-react";
 import "../../../assets/css/login/material-dashboard.min.css";
 import backgroundImage from "../../../assets/img/login-banner.avif";
 // For Toastr
@@ -47,16 +47,20 @@ const ResetPasswordForm = () => {
   ).current;
   const [, forceUpdate] = useState();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     dispatch(showLoader());
 
     if (validator.allValid()) {
       const formData = {
         userId: user._id,
-        password: bcrypt.hashSync(password, "$2a$10$CwTycUXWue0Thq9StjUM0u"),
-        token: params.token
+        // password: bcrypt.hashSync(password, "$2a$10$CwTycUXWue0Thq9StjUM0u"),
+        token: params.token,
       };
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      formData.password = hashedPassword;
+
       changePassword(formData)
         .then((res) => {
           dispatch(hideLoader());
