@@ -20,7 +20,8 @@ exports.index = async (req, res) => {
   }
 };
 
-// add new review
+// add review
+
 exports.add = async (req, res, next) => {
   const reqParam = req.body;
   await Review.create({
