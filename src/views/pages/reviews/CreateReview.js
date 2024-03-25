@@ -5,7 +5,7 @@ import { Button, Card, Container, Row, Col, Form } from "react-bootstrap";
 import SimpleReactValidator from "simple-react-validator";
 import { Error, errorResponse } from "../../../helpers/Error";
 import { toast } from "react-toastify";
-import { add } from "../../../services/Category";
+import { add } from "../../../services/Review";
 import { useDispatch } from "react-redux";
 import { showLoader, hideLoader } from "../../../actions/Action";
 
@@ -82,7 +82,7 @@ const Review = () => {
                       <Form.Group>
                         <label>Comment</label>
                         <Form.Control
-                          placeholder="Name"
+                          placeholder="comment"
                           name="comment"
                           onChange={handleChange}
                           type="text"

@@ -40,6 +40,7 @@ app.use("/api/", accountRoute);
 app.use("/api/user/", authenticateToken, userRoute);
 app.use("/api/category/", categoryRoute);
 app.use("/api/product/", productRoute);
+app.use("/api/Review/", reviewRoute);
 
 app.listen(process.env.APP_PORT, () => {
   console.log("Started application on port %d", process.env.APP_PORT);
