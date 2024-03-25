@@ -11,6 +11,7 @@ import { Carousel } from "react-responsive-carousel";
 import placeHolderImage from "../../../assets/img/placeholderImage.png";
 import { getAllProductsFromCategoryId } from "../../../services/Product";
 import { NavLink } from "react-router-dom";
+import Review from "../reviews/CreateReview";
 
 const ProductDetail = () => {
   const params = useParams();
@@ -118,14 +119,14 @@ const ProductDetail = () => {
                             src="https://i.imgur.com/o5uMfKo.jpg"
                             className="rounded-circle profile-image"
                           />
-                          <div className="d-flex flex-column ml-1 comment-profile">
+                          <div >
                             <div className="comment-ratings">
                               <i className="fa fa-star" />
                               <i className="fa fa-star" />
                               <i className="fa fa-star" />
                               <i className="fa fa-star" />
                             </div>
-                            <span className="username">Lori Benneth</span>
+                            <span className="username"><Review/></span>
                           </div>
                         </div>
                         <div className="date">

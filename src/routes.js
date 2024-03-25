@@ -19,6 +19,7 @@ const UpdateProduct = React.lazy(() => import("./views/pages/product/Update"));
 const User = React.lazy(() => import("./views/pages/user/User"));
 const AddUser = React.lazy(() => import("./views/pages/user/Create"));
 const UpdateUser = React.lazy(() => import("./views/pages/user/Update"));
+const Review = React.lazy(() => import("./views/pages/reviews/CreateReview"));
 
 const All = ["customer", "admin", "all"];
 const Admin = ["admin"];
@@ -129,6 +130,14 @@ const routes = [
     icon: "nc-icon nc-notes",
     element: ProductImageUpload,
     access: AdminCustomer,
+  },
+  {
+    path: "/reviews/create",
+    name: "Add Review",
+    sidebar: false,
+    icon: "nc-icon nc-notes",
+    element: Review,
+    access: All,
   },
 ];
 
